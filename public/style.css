@@ -350,3 +350,34 @@ h1, h2, h3, p { margin-top: 0; }
   .email-frame-wrap { padding: 8px; }
   .email-frame { min-height: 560px; }
 }
+
+/* Maildrop debugging */
+.debug-panel {
+  width: min(100%, 1100px);
+  margin: 24px auto;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 16px;
+  background: rgba(10,12,18,.82);
+  overflow: hidden;
+}
+
+.debug-panel summary {
+  cursor: pointer;
+  padding: 14px 16px;
+  font-weight: 700;
+}
+
+.debug-title {
+  padding: 12px 16px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.debug-pre {
+  margin: 0;
+  padding: 16px;
+  max-height: 520px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font: 12px/1.55 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
