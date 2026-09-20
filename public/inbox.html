@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ZMAIL Drop inbox.">
+  <title>ZMAIL Drop — Inbox</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="app-shell">
+  <header class="topbar">
+    <a class="top-brand" href="/"><span class="brand-mark tiny">Z</span><span>ZMAIL Drop</span></a>
+    <a class="top-link" href="/login.html">Change mailbox</a>
+  </header>
+
+  <main class="inbox-page">
+    <section class="mailbox-header">
+      <div class="profile-avatar">✉</div>
+      <div class="mailbox-meta">
+        <span class="eyebrow">YOUR MAILBOX</span>
+        <h1 id="mailbox-name">Loading…</h1>
+        <p id="mailbox-address" class="muted">Loading…</p>
+      </div>
+      <button id="refresh-page" class="icon-btn" type="button" title="Refresh inbox">↻ <span>Refresh</span></button>
+    </section>
+
+    <div id="inbox-alert" class="alert" hidden></div>
+
+    <section class="inbox-section">
+      <div class="list-heading">
+        <div>
+          <span class="eyebrow">INBOX</span>
+          <h2><span id="message-count">0</span> messages</h2>
+        </div>
+        <button id="refresh-mails" class="btn btn-secondary" type="button">↻ Refresh emails</button>
+      </div>
+
+      <div id="loading-state" class="empty-card">
+        <div class="spinner"></div>
+        <h3>Checking your inbox</h3>
+        <p>Contacting Maildrop…</p>
+      </div>
+
+      <div id="empty-state" class="empty-card" hidden>
+        <div class="empty-icon">⌁</div>
+        <h3>No emails yet</h3>
+        <p>We're waiting for new mail. Refresh this inbox to check again.</p>
+        <button class="btn btn-primary" type="button" data-refresh>↻ Refresh</button>
+      </div>
+
+      <div id="message-list" class="message-list" hidden></div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/script.js" defer></script>
+</body>
+</html>

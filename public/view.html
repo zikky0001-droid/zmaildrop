@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View a ZMAIL Drop email.">
+  <title>ZMAIL Drop — Message</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="app-shell message-page">
+  <header class="topbar">
+    <a class="top-brand" href="/"><span class="brand-mark tiny">Z</span><span>ZMAIL Drop</span></a>
+    <a id="back-to-inbox" class="top-link" href="/login.html">← Inbox</a>
+  </header>
+
+  <main class="view-page">
+    <div id="view-loading" class="empty-card">
+      <div class="spinner"></div>
+      <h3>Loading message</h3>
+      <p>Fetching the email from Maildrop…</p>
+    </div>
+
+    <section id="message-view" class="message-view-card" hidden>
+      <div class="message-toolbar">
+        <a id="back-button" class="back-link" href="#">← Back to inbox</a>
+        <button id="delete-message" class="btn btn-danger" type="button">Delete message</button>
+      </div>
+      <div class="message-header">
+        <span class="eyebrow">EMAIL MESSAGE</span>
+        <h1 id="view-subject">—</h1>
+        <div class="message-details">
+          <div><span>From</span><strong id="view-from">—</strong></div>
+          <div><span>Date</span><strong id="view-date">—</strong></div>
+        </div>
+      </div>
+      <div class="email-frame-wrap">
+        <iframe id="email-frame" class="email-frame" sandbox="allow-popups allow-popups-to-escape-sandbox" title="Email content"></iframe>
+      </div>
+    </section>
+
+    <div id="view-error" class="empty-card" hidden>
+      <div class="empty-icon">!</div>
+      <h3>Message unavailable</h3>
+      <p id="view-error-text">This message may have already been deleted or expired.</p>
+      <a id="error-back" class="btn btn-primary" href="#">← Back to inbox</a>
+    </div>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/script.js" defer></script>
+</body>
+</html>
