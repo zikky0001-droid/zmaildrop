@@ -135,11 +135,6 @@ module.exports = async function handler(req, res) {
         return send(res, 400, {
           ok: false,
           error: "Invalid mailbox name.",
-          diagnostics: {
-            action,
-            mailbox,
-            stage: "validation"
-          }
         });
       }
 
@@ -169,16 +164,7 @@ module.exports = async function handler(req, res) {
       return send(res, 200, {
         ok: true,
         mailbox,
-        messages,
-        diagnostics: {
-          action: "inbox",
-          mailbox,
-          httpStatus: result.diagnostics.httpStatus,
-          rawResponse: result.diagnostics.rawResponse,
-          parsedResponse: result.diagnostics.parsedResponse,
-          messageCount: messages.length,
-          durationMs: Date.now() - startedAt
-        }
+        messages
       });
     }
 
@@ -195,12 +181,6 @@ module.exports = async function handler(req, res) {
         return send(res, 400, {
           ok: false,
           error: "Invalid mailbox or message ID.",
-          diagnostics: {
-            action,
-            mailbox,
-            id,
-            stage: "validation"
-          }
         });
       }
 
@@ -225,15 +205,6 @@ module.exports = async function handler(req, res) {
         return send(res, 404, {
           ok: false,
           error: "Message not found. It may have expired or already been deleted.",
-          diagnostics: {
-            action: "message",
-            mailbox,
-            id,
-            httpStatus: result.diagnostics.httpStatus,
-            rawResponse: result.diagnostics.rawResponse,
-            parsedResponse: result.diagnostics.parsedResponse,
-            durationMs: Date.now() - startedAt
-          }
         });
       }
 
@@ -242,16 +213,7 @@ module.exports = async function handler(req, res) {
 
       return send(res, 200, {
         ok: true,
-        message: result.data.message,
-        diagnostics: {
-          action: "message",
-          mailbox,
-          id,
-          httpStatus: result.diagnostics.httpStatus,
-          rawResponse: result.diagnostics.rawResponse,
-          parsedResponse: result.diagnostics.parsedResponse,
-          durationMs: Date.now() - startedAt
-        }
+        message: result.data.message
       });
     }
 
@@ -268,12 +230,6 @@ module.exports = async function handler(req, res) {
         return send(res, 400, {
           ok: false,
           error: "Invalid mailbox or message ID.",
-          diagnostics: {
-            action,
-            mailbox,
-            id,
-            stage: "validation"
-          }
         });
       }
 
@@ -318,15 +274,6 @@ module.exports = async function handler(req, res) {
           ok: false,
           deleted: false,
           error: "Maildrop did not remove the message. The page was not changed.",
-          diagnostics: {
-            action: "delete",
-            mailbox,
-            id,
-            deleteResponse: deleteResult.diagnostics.parsedResponse,
-            verificationResponse: verifyResult.diagnostics.parsedResponse,
-            stillExists,
-            durationMs: Date.now() - startedAt
-          }
         });
       }
 
@@ -336,28 +283,14 @@ module.exports = async function handler(req, res) {
       return send(res, 200, {
         ok: true,
         deleted: true,
-        result: deleteResult.data?.delete ?? null,
-        diagnostics: {
-          action: "delete",
-          mailbox,
-          id,
-          deleteResponse: deleteResult.diagnostics.parsedResponse,
-          verificationResponse: verifyResult.diagnostics.parsedResponse,
-          stillExists: false,
-          durationMs: Date.now() - startedAt
-        }
+        result: deleteResult.data?.delete ?? null
       });
     }
 
     console.warn("[ZMAIL DROP] UNSUPPORTED OPERATION");
     return send(res, 405, {
       ok: false,
-      error: "Unsupported API operation.",
-      diagnostics: {
-        action,
-        method: req.method,
-        stage: "routing"
-      }
+      error: "Unsupported API operation."
     });
   } catch (error) {
     console.error("############################################################");
@@ -369,17 +302,7 @@ module.exports = async function handler(req, res) {
 
     return send(res, 502, {
       ok: false,
-      error: error?.message || "Maildrop request failed.",
-      diagnostics: {
-        action,
-        method: req.method,
-        durationMs: Date.now() - startedAt,
-        error: {
-          name: error?.name || "Error",
-          message: error?.message || "Unknown error",
-          stack: error?.stack || null
-        }
-      }
+      error: error?.message || "Maildrop request failed."
     });
   }
 };
