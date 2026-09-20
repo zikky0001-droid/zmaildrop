@@ -1,6 +1,11 @@
 {
   "version": 2,
   "cleanUrls": true,
+  "rewrites": [
+    { "source": "/login", "destination": "/login.html" },
+    { "source": "/inbox", "destination": "/inbox.html" },
+    { "source": "/view", "destination": "/view.html" }
+  ],
   "functions": {
     "api/maildrop.js": {
       "maxDuration": 10
