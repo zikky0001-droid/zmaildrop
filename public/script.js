@@ -42,21 +42,64 @@
   }
 
   async function api(action, options = {}) {
-    const params = new URLSearchParams({ action });
-    const response = await fetch(`/api/maildrop?${params}`, {
-      method: options.method || "GET",
+    const method = (options.method || "GET").toUpperCase();
+
+    const response = await fetch(`/api/maildrop?action=${encodeURIComponent(action)}`, {
+      method,
       headers: { "Content-Type": "application/json" },
-      body: options.body ? JSON.stringify(options.body) : undefined,
+      ...(method === "GET" || method === "HEAD"
+        ? {}
+        : { body: options.body ? JSON.stringify(options.body) : undefined }),
       cache: "no-store"
     });
 
-    let data;
-    try { data = await response.json(); }
-    catch { throw new Error(`Server returned HTTP ${response.status}`); }
+    const data = await response.json().catch(() => null);
 
-    if (!response.ok || data.ok === false) {
-      throw new Error(data.error || `Request failed (${response.status})`);
+    if (!response.ok || data?.ok === false) {
+      throw new Error(data?.error || `Request failed (${response.status})`);
     }
+
+    return data;
+  }
+
+  async function getInbox(mailbox) {
+    const query = new URLSearchParams({
+      action: "inbox",
+      mailbox
+    });
+
+    const response = await fetch(`/api/maildrop?${query.toString()}`, {
+      method: "GET",
+      cache: "no-store"
+    });
+
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok || data?.ok === false) {
+      throw new Error(data?.error || `Request failed (${response.status})`);
+    }
+
+    return data;
+  }
+
+  async function getMessage(mailbox, id) {
+    const query = new URLSearchParams({
+      action: "message",
+      mailbox,
+      id
+    });
+
+    const response = await fetch(`/api/maildrop?${query.toString()}`, {
+      method: "GET",
+      cache: "no-store"
+    });
+
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok || data?.ok === false) {
+      throw new Error(data?.error || `Request failed (${response.status})`);
+    }
+
     return data;
   }
 
@@ -107,7 +150,7 @@
       alert.hidden = true;
 
       try {
-        const data = await api("inbox", { body: { mailbox } });
+        const data = await getInbox(mailbox);
         const messages = Array.isArray(data.messages) ? data.messages : [];
 
         loading.hidden = true;
@@ -229,7 +272,7 @@
 
     async function loadMessage() {
       try {
-        const data = await api("message", { body: { mailbox, id } });
+        const data = await getMessage(mailbox, id);
         const message = data.message;
 
         $("#view-loading").hidden = true;
