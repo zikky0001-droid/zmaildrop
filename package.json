@@ -1,0 +1,9 @@
+{
+  "name": "zmaildrop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A lightweight Vercel frontend for Maildrop inboxes.",
+  "scripts": {
+    "start": "vercel dev"
+  }
+}

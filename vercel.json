@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "functions": {
+    "api/maildrop.js": {
+      "maxDuration": 10
+    }
+  }
+}
