@@ -1,54 +1,6 @@
 (() => {
   "use strict";
 
-  function debugLog(title, value) {
-    console.groupCollapsed(`[ZMAIL DROP] ${title}`);
-    if (typeof value === "string") console.log(value);
-    else console.log(value);
-    console.groupEnd();
-  }
-
-  function renderDiagnostics(diagnostics, status = "SUCCESS") {
-    const existing = document.getElementById("maildrop-debug");
-    if (!existing) return;
-
-    existing.innerHTML = "";
-
-    const title = document.createElement("div");
-    title.className = "debug-title";
-    title.textContent = `Maildrop Debug — ${status}`;
-
-    const pre = document.createElement("pre");
-    pre.className = "debug-pre";
-    pre.textContent = JSON.stringify(diagnostics ?? {}, null, 2);
-
-    existing.appendChild(title);
-    existing.appendChild(pre);
-
-    debugLog(`Maildrop ${status}`, diagnostics);
-  }
-
-  function ensureDebugPanel() {
-    if (document.getElementById("maildrop-debug")) return;
-
-    const panel = document.createElement("details");
-    panel.id = "maildrop-debug";
-    panel.className = "debug-panel";
-
-    const summary = document.createElement("summary");
-    summary.textContent = "Maildrop Debug Log";
-
-    panel.appendChild(summary);
-
-    const host =
-      document.querySelector("main") ||
-      document.querySelector(".page") ||
-      document.body;
-
-    host.appendChild(panel);
-  }
-
-
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
@@ -123,8 +75,6 @@
 
     const data = await response.json().catch(() => null);
 
-    renderDiagnostics(data?.diagnostics, data?.ok ? "SUCCESS" : "ERROR");
-
     if (!response.ok || data?.ok === false) {
       throw new Error(data?.error || `Request failed (${response.status})`);
     }
@@ -153,7 +103,6 @@
     return data;
   }
 
-  ensureDebugPanel();
 
   // Login page
   const loginForm = $("#mailbox-form");
@@ -334,10 +283,11 @@
         $("#view-date").textContent = formatDate(message.date);
 
         const frame = $("#email-frame");
-        const doc = frame.contentDocument || frame.contentWindow.document;
-        doc.open();
-        doc.write(message.html || "<p>No HTML content was supplied.</p>");
-        doc.close();
+        // Use srcdoc instead of accessing contentDocument. The iframe is
+        // sandboxed, so direct DOM access is intentionally blocked by the
+        // browser. srcdoc lets the browser render the Maildrop HTML safely
+        // without requiring cross-origin document access.
+        frame.srcdoc = message.html || "<p>No HTML content was supplied.</p>";
       } catch (err) {
         $("#view-loading").hidden = true;
         $("#view-error").hidden = false;
