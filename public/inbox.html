@@ -1,58 +1,74 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="ZMAIL Drop inbox.">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="ZMAIL Drop temporary mailbox inbox.">
+  <meta name="theme-color" content="#07090d">
   <title>ZMAIL Drop — Inbox</title>
   <link rel="stylesheet" href="/style.css">
 </head>
-<body class="app-shell">
+<body data-page="inbox">
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
   <header class="topbar">
-    <a class="top-brand" href="/"><span class="brand-mark tiny">Z</span><span>ZMAIL Drop</span></a>
-    <a class="top-link" href="/login.html">Change mailbox</a>
+    <a class="brand" href="/" aria-label="ZMAIL Drop home"><span class="brand-mark">Z</span><span><strong>ZMAIL</strong><small>DROP</small></span></a>
+    <div class="topbar-meta"><span class="live-dot"></span><span data-lagos-clock>--:--:--</span></div>
+    <button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false" data-menu-toggle><span></span><span></span><span></span></button>
   </header>
+  <aside class="mobile-menu" data-mobile-menu aria-hidden="true">
+    <div class="menu-head"><span>MENU</span><button type="button" class="icon-button" data-menu-close aria-label="Close menu">×</button></div>
+    <nav><a href="/">Home</a><a href="/login.html">New mailbox</a><a href="/#features">Features</a><a href="/#faq">FAQ</a></nav>
+    <div class="menu-section"><span class="menu-label">OTHER SERVICE</span><a class="menu-service" href="https://zdropmail.vercel.app" target="_blank" rel="noopener">Try ZDropMail ↗</a></div>
+  </aside><div class="menu-backdrop" data-menu-close></div>
 
-  <main class="inbox-page">
-    <section class="mailbox-header">
-      <div class="profile-avatar">✉</div>
-      <div class="mailbox-meta">
-        <span class="eyebrow">YOUR MAILBOX</span>
-        <h1 id="mailbox-name">Loading…</h1>
-        <p id="mailbox-address" class="muted">Loading…</p>
+  <main class="app-shell">
+    <section class="inbox-header glass reveal">
+      <div>
+        <a href="/login.html" class="back-link">← New mailbox</a>
+        <span class="eyebrow">YOUR TEMPORARY INBOX</span>
+        <h1 id="mailbox-name">Mailbox</h1>
+        <div class="mailbox-address" id="mailbox-address">—</div>
       </div>
-      <button id="refresh-page" class="icon-btn" type="button" title="Refresh inbox">↻ <span>Refresh</span></button>
+      <div class="inbox-controls">
+        <div class="time-card"><small>LAGOS / UTC+1</small><strong data-lagos-clock>--:--:--</strong></div>
+        <button id="refresh-page" class="button button-ghost" type="button">Refresh <span>↻</span></button>
+      </div>
     </section>
 
-    <div id="inbox-alert" class="alert" hidden></div>
+    <div class="inbox-meta reveal">
+      <div><span class="status-chip"><i></i> PUBLIC MAILBOX</span><span id="message-count">0 messages</span></div>
+      <span data-last-refreshed>Last checked: —</span>
+    </div>
 
-    <section class="inbox-section">
-      <div class="list-heading">
-        <div>
-          <span class="eyebrow">INBOX</span>
-          <h2><span id="message-count">0</span> messages</h2>
-        </div>
-        <button id="refresh-mails" class="btn btn-secondary" type="button">↻ Refresh emails</button>
-      </div>
+    <div id="inbox-alert" class="alert" role="status"></div>
+    <div id="loading-state" class="state-card glass"><div class="spinner"></div><h3>Checking inbox…</h3><p>Looking for incoming messages.</p></div>
+    <div id="empty-state" class="state-card glass">
+      <div class="empty-icon">✉</div><span class="eyebrow">INBOX CLEAR</span><h2>No messages yet.</h2><p>When a message arrives, it will appear here. Refresh the inbox if you are expecting something.</p>
+      <a class="button button-primary" href="https://zdropmail.vercel.app" target="_blank" rel="noopener">Try ZDropMail ↗</a>
+    </div>
 
-      <div id="loading-state" class="empty-card">
-        <div class="spinner"></div>
-        <h3>Checking your inbox</h3>
-        <p>Contacting Maildrop…</p>
-      </div>
+    <section class="message-area">
+      <div class="section-heading compact-heading"><span class="eyebrow">INCOMING MAIL</span><button id="refresh-mails" class="text-button" type="button">Refresh inbox ↻</button></div>
+      <div id="message-list" class="message-list"></div>
+    </section>
 
-      <div id="empty-state" class="empty-card" hidden>
-        <div class="empty-icon">⌁</div>
-        <h3>No emails yet</h3>
-        <p>We're waiting for new mail. Refresh this inbox to check again.</p>
-        <button class="btn btn-primary" type="button" data-refresh>↻ Refresh</button>
-      </div>
+    <section class="promo compact glass reveal">
+      <div><span class="eyebrow">CAN'T FIND YOUR EMAIL?</span><h2>Try another temporary mailbox.</h2><p>ZDropMail offers a separate short-lived mailbox workflow for cases where you need another option.</p></div>
+      <a class="button button-ghost" href="https://zdropmail.vercel.app" target="_blank" rel="noopener">Open ZDropMail ↗</a>
+    </section>
 
-      <div id="message-list" class="message-list" hidden></div>
+    <section class="system-strip glass reveal">
+      <div><span>TIME</span><strong data-lagos-clock>--:--:--</strong></div>
+      <div><span>CONNECTION</span><strong data-online-status>Checking…</strong></div>
+      <div><span>IP</span><strong data-ip-address>Loading…</strong></div>
+      <div><span>SECURITY</span><strong>HTTPS</strong></div>
     </section>
   </main>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/js/clock.js" defer></script>
+  <script src="/js/hamburger.js" defer></script>
+  <script src="/js/ui.js" defer></script>
   <script src="/script.js" defer></script>
 </body>
 </html>

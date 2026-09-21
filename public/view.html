@@ -1,52 +1,60 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="View a ZMAIL Drop email.">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Read a temporary message in ZMAIL Drop.">
+  <meta name="theme-color" content="#07090d">
   <title>ZMAIL Drop — Message</title>
   <link rel="stylesheet" href="/style.css">
 </head>
-<body class="app-shell message-page">
+<body data-page="view">
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
   <header class="topbar">
-    <a class="top-brand" href="/"><span class="brand-mark tiny">Z</span><span>ZMAIL Drop</span></a>
-    <a id="back-to-inbox" class="top-link" href="/login.html">← Inbox</a>
+    <a class="brand" href="/" aria-label="ZMAIL Drop home"><span class="brand-mark">Z</span><span><strong>ZMAIL</strong><small>DROP</small></span></a>
+    <div class="topbar-meta"><span class="live-dot"></span><span data-lagos-clock>--:--:--</span></div>
+    <button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false" data-menu-toggle><span></span><span></span><span></span></button>
   </header>
+  <aside class="mobile-menu" data-mobile-menu aria-hidden="true">
+    <div class="menu-head"><span>MENU</span><button type="button" class="icon-button" data-menu-close aria-label="Close menu">×</button></div>
+    <nav><a href="/">Home</a><a href="/login.html">New mailbox</a><a href="/#features">Features</a><a href="/#faq">FAQ</a></nav>
+    <div class="menu-section"><span class="menu-label">OTHER SERVICE</span><a class="menu-service" href="https://zdropmail.vercel.app" target="_blank" rel="noopener">Try ZDropMail ↗</a></div>
+  </aside><div class="menu-backdrop" data-menu-close></div>
 
-  <main class="view-page">
-    <div id="view-loading" class="empty-card">
-      <div class="spinner"></div>
-      <h3>Loading message</h3>
-      <p>Fetching the email from Maildrop…</p>
-    </div>
+  <main class="app-shell">
+    <a id="back-to-inbox" href="#" class="back-link reveal">← Back to inbox</a>
+    <div id="view-loading" class="state-card glass"><div class="spinner"></div><h3>Loading message…</h3><p>Preparing the message viewer.</p></div>
+    <div id="view-error" class="state-card glass"><div class="empty-icon">!</div><span class="eyebrow">MESSAGE UNAVAILABLE</span><h2>We couldn't open this message.</h2><p id="view-error-text">The message may have been deleted or is no longer available.</p><button id="error-back" class="button button-primary" type="button">Back to inbox</button></div>
 
-    <section id="message-view" class="message-view-card" hidden>
-      <div class="message-toolbar">
-        <a id="back-button" class="back-link" href="#">← Back to inbox</a>
-        <button id="delete-message" class="btn btn-danger" type="button">Delete message</button>
+    <section id="message-view" class="message-view glass reveal">
+      <div class="viewer-toolbar">
+        <button id="back-button" class="button button-ghost" type="button">← Back</button>
+        <div><span class="status-chip"><i></i> MESSAGE</span><span data-lagos-clock>--:--:--</span></div>
+        <button id="delete-message" class="button button-danger" type="button">Delete</button>
       </div>
-      <div class="message-header">
-        <span class="eyebrow">EMAIL MESSAGE</span>
+      <header class="message-header">
+        <span class="eyebrow">INCOMING EMAIL</span>
         <h1 id="view-subject">—</h1>
         <div class="message-details">
-          <div><span>From</span><strong id="view-from">—</strong></div>
-          <div><span>Date</span><strong id="view-date">—</strong></div>
+          <span>FROM <strong id="view-from">—</strong></span>
+          <span id="view-date">—</span>
         </div>
-      </div>
+      </header>
       <div class="email-frame-wrap">
-        <iframe id="email-frame" class="email-frame" sandbox="allow-popups allow-popups-to-escape-sandbox" title="Email content"></iframe>
+        <iframe id="email-frame" title="Email message" sandbox="allow-popups allow-popups-to-escape-sandbox"></iframe>
       </div>
     </section>
 
-    <div id="view-error" class="empty-card" hidden>
-      <div class="empty-icon">!</div>
-      <h3>Message unavailable</h3>
-      <p id="view-error-text">This message may have already been deleted or expired.</p>
-      <a id="error-back" class="btn btn-primary" href="#">← Back to inbox</a>
-    </div>
+    <section class="promo compact glass reveal">
+      <div><span class="eyebrow">ANOTHER OPTION</span><h2>Need a different temporary inbox?</h2><p>Try ZDropMail for another short-lived mailbox workflow.</p></div>
+      <a class="button button-ghost" href="https://zdropmail.vercel.app" target="_blank" rel="noopener">Open ZDropMail ↗</a>
+    </section>
   </main>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/js/clock.js" defer></script>
+  <script src="/js/hamburger.js" defer></script>
+  <script src="/js/ui.js" defer></script>
   <script src="/script.js" defer></script>
 </body>
 </html>

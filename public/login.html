@@ -1,35 +1,61 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Open a ZMAIL Drop mailbox.">
-  <title>ZMAIL Drop — Open Inbox</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Open a ZMAIL Drop temporary mailbox.">
+  <meta name="theme-color" content="#07090d">
+  <title>ZMAIL Drop — Open Mailbox</title>
   <link rel="stylesheet" href="/style.css">
 </head>
-<body class="page-shell">
-  <main class="center-page">
-    <a class="back-link" href="/">← Back to ZMAIL Drop</a>
-    <section class="login-card">
-      <div class="brand-mark small">Z</div>
-      <span class="eyebrow">OPEN MAILBOX</span>
-      <h1>Where should we look?</h1>
-      <p class="muted">Enter the Maildrop username you want to receive or check mail for.</p>
+<body data-page="login">
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="ZMAIL Drop home"><span class="brand-mark">Z</span><span><strong>ZMAIL</strong><small>DROP</small></span></a>
+    <div class="topbar-meta"><span class="live-dot"></span><span data-lagos-clock>--:--:--</span></div>
+    <button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false" data-menu-toggle><span></span><span></span><span></span></button>
+  </header>
+  <aside class="mobile-menu" data-mobile-menu aria-hidden="true">
+    <div class="menu-head"><span>MENU</span><button type="button" class="icon-button" data-menu-close aria-label="Close menu">×</button></div>
+    <nav><a href="/">Home</a><a href="/#features">Features</a><a href="/#how-it-works">How it works</a><a href="/#faq">FAQ</a><a href="/login.html">Open mailbox</a></nav>
+    <div class="menu-section"><span class="menu-label">OTHER SERVICE</span><a class="menu-service" href="https://zdropmail.vercel.app" target="_blank" rel="noopener">Try ZDropMail ↗</a></div>
+  </aside><div class="menu-backdrop" data-menu-close></div>
 
-      <form id="mailbox-form" class="mailbox-form">
-        <label for="mailbox">Mailbox username</label>
-        <div class="input-group">
-          <input id="mailbox" name="mailbox" type="text" maxlength="64"
-                 autocomplete="off" autocapitalize="none" spellcheck="false"
-                 placeholder="devzikky123" required>
-          <span>@maildrop.cc</span>
+  <main class="center-page">
+    <a href="/" class="back-link">← Back to ZMAIL Drop</a>
+    <section class="login-layout">
+      <div class="login-intro reveal">
+        <span class="eyebrow">OPEN MAILBOX</span>
+        <h1>Choose where your temporary mail should arrive.</h1>
+        <p>Pick a username and open the corresponding public inbox. No account or password is required.</p>
+        <div class="mini-facts">
+          <span>PUBLIC</span><span>NO PASSWORD</span><span>FAST ACCESS</span>
         </div>
-        <p class="field-hint">Use letters, numbers, dots, hyphens, or underscores.</p>
-        <button class="btn btn-primary btn-wide" type="submit">Open inbox <span>→</span></button>
-        <div id="login-error" class="form-error" hidden></div>
-      </form>
+      </div>
+      <div class="login-card glass reveal">
+        <div class="card-top"><span class="eyebrow">MAILBOX ACCESS</span><span class="status-chip"><i></i> READY</span></div>
+        <form id="mailbox-form" novalidate>
+          <label for="mailbox">Mailbox username</label>
+          <div class="mailbox-input">
+            <input id="mailbox" name="mailbox" maxlength="64" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="devzikky123" required>
+            <span>@maildrop.cc</span>
+          </div>
+          <p class="field-hint">Use letters, numbers, dots, underscores, or hyphens. Choose something you can recognize.</p>
+          <div id="login-error" class="form-error" role="alert"></div>
+          <button class="button button-primary button-wide" type="submit">Open inbox <span>→</span></button>
+        </form>
+        <div class="login-warning"><strong>Public mailbox</strong><p>Anyone who knows the address may be able to view its messages. Never use this mailbox for passwords, banking, private accounts, or sensitive information.</p></div>
+      </div>
+    </section>
+    <section class="promo compact glass reveal">
+      <div><span class="eyebrow">ALTERNATIVE</span><h2>Need another temporary-email option?</h2><p>ZDropMail provides a different short-lived mailbox workflow.</p></div>
+      <a class="button button-ghost" href="https://zdropmail.vercel.app" target="_blank" rel="noopener">Try ZDropMail ↗</a>
     </section>
   </main>
+
+  <script src="/js/clock.js" defer></script>
+  <script src="/js/hamburger.js" defer></script>
+  <script src="/js/ui.js" defer></script>
   <script src="/script.js" defer></script>
 </body>
 </html>

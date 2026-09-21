@@ -1,59 +1,156 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="ZMAIL Drop — simple temporary Maildrop inbox access.">
-  <title>ZMAIL Drop — Welcome</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="ZMAIL Drop — fast public temporary mailboxes with no account required.">
+  <meta name="theme-color" content="#07090d">
+  <title>ZMAIL Drop — Temporary Mailbox</title>
   <link rel="stylesheet" href="/style.css">
 </head>
-<body class="page-shell">
-  <main class="landing">
-    <section class="hero-card">
-      <div class="brand-mark">Z</div>
-      <span class="eyebrow">ZMAIL DROP</span>
-      <h1>Simple email.<br><span>No account required.</span></h1>
-      <p class="hero-copy">
-        Open a Maildrop inbox, check incoming messages, read their contents,
-        refresh for new mail, and delete messages when you're finished.
-      </p>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="/login.html">Open an inbox <span>→</span></a>
-        <a class="btn btn-ghost" href="#how-it-works">How it works</a>
+<body data-page="home">
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+  <div class="site-progress"></div>
+
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="ZMAIL Drop home">
+      <span class="brand-mark">Z</span>
+      <span><strong>ZMAIL</strong><small>DROP</small></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#faq">FAQ</a>
+      <a href="/login.html" class="nav-cta">Open inbox</a>
+    </nav>
+    <div class="topbar-meta">
+      <span class="live-dot"></span><span data-lagos-clock>--:--:--</span>
+    </div>
+    <button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false" data-menu-toggle>
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <aside class="mobile-menu" data-mobile-menu aria-hidden="true">
+    <div class="menu-head">
+      <span>MENU</span>
+      <button type="button" class="icon-button" data-menu-close aria-label="Close menu">×</button>
+    </div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#faq">FAQ</a>
+      <a href="/login.html">Open mailbox <span>↗</span></a>
+    </nav>
+    <div class="menu-section">
+      <span class="menu-label">DEVELOPER</span>
+      <p>ZMAIL Drop is a lightweight temporary-mail interface built for quick, simple inbox access.</p>
+    </div>
+    <div class="menu-section">
+      <span class="menu-label">OTHER SERVICE</span>
+      <a class="menu-service" href="https://zdropmail.vercel.app" target="_blank" rel="noopener">Try ZDropMail ↗</a>
+    </div>
+  </aside>
+  <div class="menu-backdrop" data-menu-close></div>
+
+  <main>
+    <section class="hero section-shell reveal">
+      <div class="hero-copy">
+        <span class="eyebrow"><span class="pulse"></span> TEMPORARY MAILBOX SYSTEM</span>
+        <h1>Email without the <span>extra baggage.</span></h1>
+        <p class="hero-text">Open a temporary public mailbox, check incoming messages, read what you need, and move on. No account setup. No complicated dashboard.</p>
+        <div class="hero-actions">
+          <a href="/login.html" class="button button-primary">Open an inbox <span>→</span></a>
+          <a href="#how-it-works" class="button button-ghost">See how it works</a>
+        </div>
+        <div class="hero-note"><span>⚠</span> Public mailbox. Never use it for passwords, banking, or private accounts.</div>
       </div>
-      <div class="notice">
-        <span class="notice-icon">!</span>
-        <div>
-          <strong>Public temporary email</strong>
-          <p>Maildrop inboxes are public and temporary. Never use them for passwords, banking, private information, or sensitive accounts.</p>
+      <div class="hero-console glass">
+        <div class="console-top"><span>LIVE SYSTEM</span><span class="status-chip"><i></i> ONLINE</span></div>
+        <div class="console-time" data-lagos-clock>--:--:--</div>
+        <div class="console-zone">AFRICA/LAGOS · UTC+1</div>
+        <div class="console-grid">
+          <div><small>ACCESS</small><strong>PUBLIC</strong></div>
+          <div><small>ACCOUNT</small><strong>NONE</strong></div>
+          <div><small>SETUP</small><strong>INSTANT</strong></div>
+          <div><small>MODE</small><strong>INBOX</strong></div>
         </div>
       </div>
     </section>
 
-    <section id="how-it-works" class="info-section">
-      <div class="section-heading">
-        <span class="eyebrow">HOW IT WORKS</span>
-        <h2>Three simple steps.</h2>
+    <section id="features" class="section-shell">
+      <div class="section-heading reveal">
+        <span class="eyebrow">01 / CAPABILITIES</span>
+        <h2>Everything you need for a quick temporary inbox.</h2>
       </div>
-      <div class="steps-grid">
-        <article class="step-card">
-          <div class="step-number">01</div>
-          <h3>Choose a mailbox</h3>
-          <p>Enter any Maildrop mailbox name you want to check.</p>
-        </article>
-        <article class="step-card">
-          <div class="step-number">02</div>
-          <h3>Check your mail</h3>
-          <p>Refresh the inbox whenever you are waiting for a new message.</p>
-        </article>
-        <article class="step-card">
-          <div class="step-number">03</div>
-          <h3>Read or delete</h3>
-          <p>Open a message to view its HTML or delete it directly from Maildrop.</p>
-        </article>
+      <div class="feature-grid">
+        <article class="feature-card glass reveal"><span class="feature-number">01</span><h3>No account</h3><p>Open a mailbox directly. There is no profile or registration flow to complete.</p></article>
+        <article class="feature-card glass reveal"><span class="feature-number">02</span><h3>Choose a username</h3><p>Enter the mailbox name you want to open instead of being forced to accept a random address.</p></article>
+        <article class="feature-card glass reveal"><span class="feature-number">03</span><h3>Public inbox</h3><p>Anyone who knows the address may be able to access the same mailbox. Treat it as public.</p></article>
+        <article class="feature-card glass reveal"><span class="feature-number">04</span><h3>Read & delete</h3><p>Check incoming messages, open their contents, and delete messages you no longer need.</p></article>
+        <article class="feature-card glass reveal"><span class="feature-number">05</span><h3>Fast access</h3><p>No password is assigned to the mailbox. That makes access quick, but it also means privacy is limited.</p></article>
+        <article class="feature-card glass reveal"><span class="feature-number">06</span><h3>Browser friendly</h3><p>Use the service from a phone, tablet, or desktop browser without installing an app.</p></article>
+      </div>
+    </section>
+
+    <section id="how-it-works" class="section-shell">
+      <div class="section-heading reveal">
+        <span class="eyebrow">02 / WORKFLOW</span>
+        <h2>Three steps. That's it.</h2>
+      </div>
+      <div class="steps">
+        <article class="step glass reveal"><span>01</span><div><h3>Choose a mailbox</h3><p>Pick a username and open its temporary inbox.</p></div></article>
+        <article class="step glass reveal"><span>02</span><div><h3>Wait for incoming mail</h3><p>Refresh the inbox when you are expecting a message.</p></div></article>
+        <article class="step glass reveal"><span>03</span><div><h3>Read or remove it</h3><p>Open the message, use the information you need, then delete it when appropriate.</p></div></article>
+      </div>
+    </section>
+
+    <section class="promo section-shell reveal">
+      <div>
+        <span class="eyebrow">ANOTHER ZMAIL OPTION</span>
+        <h2>Need a different temporary mailbox?</h2>
+        <p>Try ZDropMail when you want a different temporary-email workflow, including a generated private mailbox with a short lifetime.</p>
+      </div>
+      <a class="button button-primary" href="https://zdropmail.vercel.app" target="_blank" rel="noopener">Open ZDropMail ↗</a>
+    </section>
+
+    <section class="section-shell info-grid">
+      <article class="info-panel glass reveal">
+        <span class="eyebrow">PUBLIC MAILBOX</span>
+        <h3>Use it for low-risk sign-ups and temporary messages.</h3>
+        <p>Do not use a public temporary inbox for sensitive accounts. If a message contains private information, delete it when you are finished.</p>
+      </article>
+      <article class="info-panel glass reveal">
+        <span class="eyebrow">SYSTEM STATUS</span>
+        <div class="system-list">
+          <div><span>Website</span><strong><i class="status-dot"></i> Online</strong></div>
+          <div><span>Connection</span><strong data-online-status>Checking…</strong></div>
+          <div><span>Timezone</span><strong>Africa/Lagos</strong></div>
+          <div><span>Security</span><strong>HTTPS</strong></div>
+        </div>
+      </article>
+    </section>
+
+    <section id="faq" class="section-shell">
+      <div class="section-heading reveal"><span class="eyebrow">03 / FAQ</span><h2>Good to know before you use it.</h2></div>
+      <div class="faq-list">
+        <details class="faq glass reveal"><summary>Are these inboxes private?<span>+</span></summary><p>No. Treat a temporary mailbox as public. Someone who knows the address may be able to access the same inbox.</p></details>
+        <details class="faq glass reveal"><summary>Do I get a password?<span>+</span></summary><p>No password is assigned. This is part of what makes the mailbox quick to open, but it also means it should not be used for sensitive information.</p></details>
+        <details class="faq glass reveal"><summary>How long does an inbox last?<span>+</span></summary><p>Temporary storage is not permanent. Inboxes can be cleared when they become inactive, including when an inbox does not receive a message within the service's inactivity window. Do not rely on it as long-term storage.</p></details>
+        <details class="faq glass reveal"><summary>Can I send email from here?<span>+</span></summary><p>ZMAIL Drop is designed around receiving and reading temporary messages. It is not intended to be a normal personal email account.</p></details>
       </div>
     </section>
   </main>
-  <footer class="site-footer">© ZMAIL Drop · Powered by Maildrop</footer>
+
+  <footer class="footer section-shell">
+    <div><a class="brand" href="/"><span class="brand-mark">Z</span><span><strong>ZMAIL</strong><small>DROP</small></span></a><p>Simple temporary mail access.</p></div>
+    <div class="footer-system"><span>AFRICA/LAGOS</span><strong data-lagos-clock>--:--:--</strong><small>© ZMAIL Drop</small></div>
+  </footer>
+
+  <script src="/js/clock.js" defer></script>
+  <script src="/js/hamburger.js" defer></script>
+  <script src="/js/ui.js" defer></script>
 </body>
 </html>
