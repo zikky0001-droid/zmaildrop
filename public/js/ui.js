@@ -3,6 +3,9 @@
 
   document.documentElement.classList.add("js-ready");
 
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- Reveal on scroll ---------- */
   const reveal = () => {
     const items = document.querySelectorAll(".reveal");
     if (!("IntersectionObserver" in window)) {
@@ -20,6 +23,7 @@
     items.forEach(el => observer.observe(el));
   };
 
+  /* ---------- Scroll progress bar ---------- */
   const initProgress = () => {
     const bar = document.querySelector(".site-progress");
     if (!bar) return;
@@ -35,6 +39,7 @@
     onScroll();
   };
 
+  /* ---------- FAQ accordion (only one open) ---------- */
   const initFaq = () => {
     const faqs = document.querySelectorAll(".faq-list .faq");
     faqs.forEach(d => {
@@ -47,9 +52,11 @@
     });
   };
 
+  /* ---------- Animated counters ---------- */
   const initCounters = () => {
     const els = document.querySelectorAll("[data-count]");
     if (!els.length) return;
+
     const run = el => {
       const target = parseFloat(el.dataset.count) || 0;
       const suffix = el.dataset.suffix || "";
@@ -63,10 +70,22 @@
       };
       requestAnimationFrame(tick);
     };
+
+    // Reduced motion: just show the final number
+    if (reducedMotion) {
+      els.forEach(el => {
+        const target = parseFloat(el.dataset.count) || 0;
+        const suffix = el.dataset.suffix || "";
+        el.textContent = Math.round(target) + suffix;
+      });
+      return;
+    }
+
     if (!("IntersectionObserver" in window)) {
       els.forEach(run);
       return;
     }
+
     const io = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -78,28 +97,69 @@
     els.forEach(el => io.observe(el));
   };
 
+  /* ---------- Rotating word swap ---------- */
   const initWordSwap = () => {
     const el = document.querySelector("[data-word-swap]");
     if (!el) return;
     const words = (el.dataset.words || "").split(",").map(w => w.trim()).filter(Boolean);
     if (words.length < 2) return;
+
+    // Reduced motion: show only the first word, no cycling
+    if (reducedMotion) {
+      el.textContent = words[0];
+      return;
+    }
+
     let i = 0;
-    window.setInterval(() => {
-      el.classList.add("out");
-      window.setTimeout(() => {
-        i = (i + 1) % words.length;
-        el.textContent = words[i];
-        el.classList.remove("out");
-      }, 280);
-    }, 2600);
+    let swapId = null;
+
+    const start = () => {
+      swapId = window.setInterval(() => {
+        el.classList.add("out");
+        window.setTimeout(() => {
+          i = (i + 1) % words.length;
+          el.textContent = words[i];
+          el.classList.remove("out");
+        }, 280);
+      }, 2600);
+    };
+
+    const stop = () => {
+      if (swapId !== null) {
+        clearInterval(swapId);
+        swapId = null;
+      }
+    };
+
+    // Pause when tab is hidden, resume when visible
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stop();
+      else start();
+    });
+
+    start();
   };
 
+  /* ---------- Dynamic year range (2025–current) ---------- */
+  const initYearRange = () => {
+    const startYear = 2025;
+    const currentYear = new Date().getFullYear();
+    const text = currentYear > startYear
+      ? `${startYear}–${currentYear}`
+      : `${startYear}`;
+    document.querySelectorAll("[data-year-range]").forEach(el => {
+      el.textContent = text;
+    });
+  };
+
+  /* ---------- Online / offline status ---------- */
   const setOnlineStatus = () => {
     document.querySelectorAll("[data-online-status]").forEach(el => {
       el.textContent = navigator.onLine ? "Online" : "Offline";
     });
   };
 
+  /* ---------- IP address lookup ---------- */
   const showConnectionInfo = () => {
     const elements = document.querySelectorAll("[data-ip-address]");
     if (!elements.length) return;
@@ -116,6 +176,7 @@
       .catch(() => elements.forEach(el => el.textContent = "Unavailable"));
   };
 
+  /* ---------- Boot ---------- */
   window.addEventListener("online", setOnlineStatus);
   window.addEventListener("offline", setOnlineStatus);
 
@@ -124,8 +185,10 @@
   initFaq();
   initCounters();
   initWordSwap();
+  initYearRange();
   setOnlineStatus();
   showConnectionInfo();
 })();
+
 
 
