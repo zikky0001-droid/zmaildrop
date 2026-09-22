@@ -15,7 +15,7 @@ A lightweight web app and public API for creating disposable email inboxes — n
 ---
 
 ## 📖 What is ZMAIL Drop?
-```
+
 ZMAIL Drop gives anyone a fast, ephemeral email address in seconds. It's designed for:
 
 - One-time signups and confirmation codes
@@ -24,7 +24,7 @@ ZMAIL Drop gives anyone a fast, ephemeral email address in seconds. It's designe
 - Anything that shouldn't touch a real email account
 
 There's no account, no login, no tracking. You pick a mailbox name, and the ZMAIL Drop server assigns you an address. Everything is public and free — the whole stack is open source.
-```
+
 ---
 
 
