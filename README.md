@@ -10,24 +10,79 @@
 
 A lightweight web app and public API for creating disposable email inboxes — no account, no password, no cost. Built by [DEV ZIKKY 🧑‍💻](https://zmaildrop.vercel.app/owner.html).
 
+---
+
+<div align="center">
+
+  <!-- ZMAIL Drop Capsule -->
+  <img src="https://capsule-render.vercel.app/api?type=speech&height=200&color=gradient&text=ZMAIL%20DROP&animation=blinking&fontAlign=42&fontAlignY=36&descAlign=32&reversal=false&textBg=false&fontColor=55E6FF&desc=TEMP%20MAIL%20%2B%20PUBLIC%20API%20%C2%B7%20BY%20DEV%20ZIKKY" width="80%" alt="ZMAIL Drop">
+
+  <!-- Typing Animation -->
+  <img src="https://readme-typing-svg.herokuapp.com/?font=Fira+Code&size=24&duration=3200&color=55E6FF&background=00000000&center=true&vCenter=true&width=720&lines=Fast+Public+Temporary+Mailboxes+%F0%9F%93%A7;No+Account+%C2%B7+No+Password+%C2%B7+100%25+Free;REST+API+for+Developers+%F0%9F%9A%80;Built+by+DEV+ZIKKY" alt="Typing Animation">
+
+  <!-- Badge Row -->
+  <p align="center">
+    <img src="https://img.shields.io/badge/Version-1.0-55E6FF?style=for-the-badge&logo=vercel&logoColor=white&labelColor=07090d" alt="Version" />
+    <img src="https://img.shields.io/badge/API-v1-8B7CFF?style=for-the-badge&logo=fastapi&logoColor=white&labelColor=07090d" alt="API" />
+    <img src="https://img.shields.io/github/stars/zikky0001-droid/zmaildrop?style=for-the-badge&logo=starship&color=55E6FF&labelColor=07090d" alt="Stars" />
+    <img src="https://img.shields.io/github/forks/zikky0001-droid/zmaildrop?style=for-the-badge&logo=forgejo&color=55E6FF&labelColor=07090d" alt="Forks" />
+  </p>
+
+  <!-- Logo 1 -->
+  <p align="center">
+    <a href="https://zmaildrop.vercel.app">
+      <img alt="ZMAIL Drop" height="280" src="logo1.png" style="border-radius: 20px; border: 2px solid #55E6FF; box-shadow: 0 0 40px rgba(85,230,255,0.35);">
+    </a>
+  </p>
+
 </div>
 
 ---
 
-## 📖 What is ZMAIL Drop?
+<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%" alt="">
 
-ZMAIL Drop gives anyone a fast, ephemeral email address in seconds. It's designed for:
+<div align="center">
 
-- One-time signups and confirmation codes
-- Testing email flows without polluting a real inbox
-- Bots and scripts that need to receive messages programmatically
-- Anything that shouldn't touch a real email account
+  <a href="https://git.io/typing-svg">
+    <img src="https://readme-typing-svg.demolab.com?font=Black+Ops+One&size=42&pause=600&color=55E6FF&center=true&width=900&height=100&lines=PLEASE+FORK+%26+STAR+THIS+REPO" alt="Fork & Star" />
+  </a>
 
-There's no account, no login, no tracking. You pick a mailbox name, and the ZMAIL Drop server assigns you an address. Everything is public and free — the whole stack is open source.
+  <!-- Logo 2 -->
+  <p align="center">
+    <img src="logo2.png" alt="ZMAIL Drop Logo" width="160" style="border-radius: 50%; border: 3px solid #55E6FF; box-shadow: 0 0 40px rgba(85,230,255,0.4); margin: 16px;">
+  </p>
+
+  <!-- Stats -->
+  <p>
+    <img src="https://img.shields.io/github/forks/zikky0001-droid/zmaildrop?style=for-the-badge&color=55E6FF&logo=github&logoColor=white&label=Forks" alt="Forks" />
+    <img src="https://img.shields.io/github/followers/zikky0001-droid?style=for-the-badge&color=55E6FF&logo=github&logoColor=white&label=Followers" alt="Followers" />
+    <img src="https://img.shields.io/github/last-commit/zikky0001-droid/zmaildrop?style=for-the-badge&color=55E6FF&logo=git&logoColor=white&label=Last%20Commit" alt="Last Commit" />
+    <img src="https://img.shields.io/github/repo-size/zikky0001-droid/zmaildrop?style=for-the-badge&color=55E6FF&logo=database&logoColor=white&label=Repo%20Size" alt="Repo Size" />
+  </p>
+
+</div>
+
+<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%" alt="">
+
+<br>
+
+<div align="center">
+  <a href="https://github.com/zikky0001-droid" target="_blank">
+    <img src="https://img.shields.io/badge/-FOLLOW%20ON%20GITHUB-07090d?style=for-the-badge&logo=github&logoColor=55E6FF" alt="Follow"/>
+  </a>
+  <a href="https://github.com/zikky0001-droid/zmaildrop/fork">
+    <img src="https://img.shields.io/badge/FORK%20THIS%20REPO-07090d?style=for-the-badge&logo=forgejo&logoColor=55E6FF" alt="Fork"/>
+  </a>
+  <a href="https://github.com/zikky0001-droid/zmaildrop/stargazers">
+    <img src="https://img.shields.io/badge/STAR%20THIS%20REPO-07090d?style=for-the-badge&logo=starship&logoColor=55E6FF" alt="Star"/>
+  </a>
+</div>
+
+<br>
+
+<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%" alt="">
 
 ---
-
-
 
 ## 🛠️ Built With
 
