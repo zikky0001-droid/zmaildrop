@@ -30,7 +30,10 @@
       <div class="viewer-toolbar">
         <button id="back-button" class="button button-ghost" type="button">← Back</button>
         <div><span class="status-chip"><i></i> MESSAGE</span><span data-lagos-clock>--:--:--</span></div>
-        <button id="delete-message" class="button button-danger" type="button">Delete</button>
+        <div class="toolbar-actions">
+          <button id="download-message" class="button button-ghost" type="button">⬇ .eml</button>
+          <button id="delete-message" class="button button-danger" type="button">Delete</button>
+        </div>
       </div>
       <header class="message-header">
         <span class="eyebrow">INCOMING EMAIL</span>
@@ -41,12 +44,12 @@
         </div>
       </header>
       <div class="email-frame-wrap">
-        <iframe id="email-frame" title="Email message" sandbox="allow-popups allow-popups-to-escape-sandbox"></iframe>
+        <iframe id="email-frame" title="Email message" sandbox="allow-popups allow-popups-to-escape-sandbox allow-downloads"></iframe>
       </div>
     </section>
 
     <section class="promo compact glass reveal">
-      <div><span class="eyebrow">ANOTHER OPTION</span><h2>Need a different temporary inbox?</h2><p>Try ZDropMail for another short-lived mailbox workflow.</p></div>
+      <div><span class="eyebrow">ANOTHER OPTION 💡</span><h2>Need a different temporary inbox?</h2><p>Try ZDropMail for another short-lived mailbox workflow.</p></div>
       <a class="button button-ghost" href="https://zdropmail.vercel.app" target="_blank" rel="noopener">Open ZDropMail ↗</a>
     </section>
   </main>
@@ -58,3 +61,4 @@
   <script src="/script.js" defer></script>
 </body>
 </html>
+

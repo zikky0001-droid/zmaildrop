@@ -38,6 +38,15 @@
     window.__zmailToast = setTimeout(() => el.classList.remove("show"), 2600);
   };
 
+  const safeFilename = (name, fallback = "download") => {
+    const clean = String(name || "")
+      .replace(/[\\/:*?"<>|\r\n]+/g, "_")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 120);
+    return clean || fallback;
+  };
+
   async function api(action, options = {}) {
     const init = {
       method: options.method || "GET",
@@ -62,7 +71,6 @@
     return data;
   }
 
-  // Fixed: always send mailbox on the first request (no more 400 fallback)
   async function getInbox(mailbox) {
     const response = await fetch(
       `/api/maildrop?action=inbox&mailbox=${encodeURIComponent(mailbox)}`,
@@ -119,7 +127,6 @@
     return message.subject || message.Subject || "(No subject)";
   }
 
-  // Fixed: now includes headerfrom (what the Maildrop API actually returns)
   function messageFrom(message) {
     return (
       message.headerfrom ||
@@ -281,13 +288,27 @@
     loadInbox(mailbox);
   }
 
+  /* ============================================================
+     MIME / attachment helpers
+     ============================================================ */
+
+  function splitMimeParts(rawMime) {
+    if (!rawMime) return [];
+    return rawMime.split(/^--[^\r\n]+/m);
+  }
+
+  function partBody(part) {
+    const headerEnd = part.search(/\r?\n\r?\n/);
+    if (headerEnd === -1) return "";
+    return part.slice(headerEnd).replace(/[\r\n\s]/g, "");
+  }
+
   function resolveCidImages(html, rawMime) {
     if (!html || !rawMime) return html;
 
-    const parts = rawMime.split(/^--[^\r\n]+/m);
     const cidMap = {};
 
-    for (const part of parts) {
+    for (const part of splitMimeParts(rawMime)) {
       const cidMatch = part.match(/Content-ID:\s*<([^>]+)>/i);
       if (!cidMatch) continue;
 
@@ -296,23 +317,174 @@
 
       if (!/Content-Transfer-Encoding:\s*base64/i.test(part)) continue;
 
-      const headerEnd = part.search(/\r?\n\r?\n/);
-      if (headerEnd === -1) continue;
-
-      const body = part
-        .slice(headerEnd)
-        .replace(/[\r\n\s]/g, "");
-
+      const body = partBody(part);
       if (!body) continue;
 
-      const mimeType = typeMatch[1].trim();
-      cidMap[cidMatch[1]] = `data:${mimeType};base64,${body}`;
+      cidMap[cidMatch[1]] = `data:${typeMatch[1].trim()};base64,${body}`;
     }
 
     return html.replace(/cid:([^"'\s>)]+)/gi, (match, cid) =>
       cidMap[cid] || match
     );
   }
+
+  function parseAttachments(rawMime) {
+    if (!rawMime) return [];
+
+    const out = [];
+
+    for (const part of splitMimeParts(rawMime)) {
+      const dispMatch = part.match(
+        /Content-Disposition:\s*attachment;[\s\S]*?filename="?([^"\r\n;]+)"?/i
+      );
+      if (!dispMatch) continue;
+      if (!/Content-Transfer-Encoding:\s*base64/i.test(part)) continue;
+
+      const typeMatch = part.match(/Content-Type:\s*([^;\r\n]+)/i);
+      const body = partBody(part);
+      if (!body) continue;
+
+      out.push({
+        filename: dispMatch[1].trim(),
+        mime: typeMatch ? typeMatch[1].trim() : "application/octet-stream",
+        base64: body
+      });
+    }
+
+    return out;
+  }
+
+  function base64ToBlob(base64, mime) {
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return new Blob([bytes], { type: mime || "application/octet-stream" });
+  }
+
+  function triggerDownload(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function downloadAttachment(att) {
+    try {
+      const blob = base64ToBlob(att.base64, att.mime);
+      triggerDownload(blob, safeFilename(att.filename, "attachment"));
+    } catch (error) {
+      toast("Download failed: " + error.message);
+    }
+  }
+
+  function downloadEml(message, fallbackId) {
+    const raw = message.data || "";
+    if (!raw) {
+      toast("Raw message is not available.");
+      return;
+    }
+    const subject = safeFilename(message.subject || "", "");
+    const filename = (subject || fallbackId || "message") + ".eml";
+    triggerDownload(new Blob([raw], { type: "message/rfc822" }), filename);
+  }
+
+  const IFRAME_STYLE = `
+    <style>
+      .zmail-img-wrap{position:relative;display:inline-block;max-width:100%;line-height:0}
+      .zmail-img-wrap img{display:block;max-width:100%;height:auto}
+      .zmail-img-dl{
+        position:absolute;top:8px;right:8px;
+        display:inline-flex;align-items:center;justify-content:center;
+        width:32px;height:32px;border-radius:10px;
+        background:rgba(0,0,0,.65);color:#fff;text-decoration:none;
+        font:700 16px/1 system-ui,sans-serif;
+        opacity:0;transition:opacity .2s;cursor:pointer;
+        border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(6px);
+        -webkit-backdrop-filter:blur(6px);
+      }
+      .zmail-img-wrap:hover .zmail-img-dl{opacity:1}
+      .zmail-img-dl:hover{background:rgba(0,0,0,.85)}
+      @media (max-width:600px){.zmail-img-dl{opacity:1}}
+      body{margin:0}
+    </style>
+  `;
+
+  function injectImageDownloadButtons(html) {
+    if (!html) return html;
+    try {
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      doc.querySelectorAll("img").forEach(img => {
+        const src = img.getAttribute("src") || "";
+        if (!src) return;
+
+        let ext = "png";
+        if (src.startsWith("data:image/")) {
+          const head = src.slice(11, src.indexOf(";"));
+          ext = head.replace("jpeg", "jpg").replace("svg+xml", "svg");
+        } else {
+          const m = src.match(/\.([a-z0-9]{2,5})(?:[?#]|$)/i);
+          if (m) ext = m[1].toLowerCase();
+        }
+
+        const wrap = doc.createElement("span");
+        wrap.className = "zmail-img-wrap";
+        img.parentNode.insertBefore(wrap, img);
+        wrap.appendChild(img);
+
+        const a = doc.createElement("a");
+        a.className = "zmail-img-dl";
+        a.href = src;
+        a.setAttribute("download", `image.${ext}`);
+        a.setAttribute("target", "_blank");
+        a.setAttribute("rel", "noopener");
+        a.title = "Download image";
+        a.textContent = "⬇";
+        wrap.appendChild(a);
+      });
+
+      return `<!DOCTYPE html><html><head><meta charset="utf-8">${IFRAME_STYLE}</head><body>${doc.body.innerHTML}</body></html>`;
+    } catch {
+      return html;
+    }
+  }
+
+  function renderAttachments(message) {
+    document.querySelectorAll(".zmail-attachments").forEach(el => el.remove());
+
+    const atts = parseAttachments(message.data || "");
+    if (!atts.length) return;
+
+    const frame = document.querySelector("#email-frame");
+    const host = frame?.closest(".email-frame-wrap") || frame?.parentElement;
+    if (!host) return;
+
+    const block = document.createElement("div");
+    block.className = "zmail-attachments";
+
+    const title = document.createElement("div");
+    title.className = "zmail-attachments-title";
+    title.textContent = `Attachments (${atts.length})`;
+    block.appendChild(title);
+
+    atts.forEach(att => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "zmail-attachment-btn";
+      btn.innerHTML = `⬇ <span>${escapeHTML(att.filename)}</span>`;
+      btn.addEventListener("click", () => downloadAttachment(att));
+      block.appendChild(btn);
+    });
+
+    host.parentElement.insertBefore(block, host);
+  }
+
+  /* ============================================================
+     Message view
+     ============================================================ */
 
   async function initView() {
     const view = $("#message-view");
@@ -330,7 +502,6 @@
     $("#back-button")?.addEventListener("click", () => { window.location.href = backUrl; });
     $("#error-back")?.addEventListener("click", () => { window.location.href = backUrl; });
 
-    // Start in clean state
     loading?.classList.remove("hidden");
     errorBox?.classList.add("hidden");
     view.classList.add("hidden");
@@ -348,7 +519,6 @@
 
       $("#view-subject").textContent = message.subject || "(No subject)";
 
-      // Fixed: use headerfrom (API field)
       $("#view-from").textContent =
         message.headerfrom ||
         message.from?.address ||
@@ -360,12 +530,17 @@
 
       const frame = $("#email-frame");
       const rawHtml = message.html || message.bodyHtml || message.body || `<pre>${escapeHTML(message.text || "")}</pre>`;
-      const html = resolveCidImages(rawHtml, message.data || "");
-      frame.srcdoc = html;
+      const withCid = resolveCidImages(rawHtml, message.data || "");
+      const finalHtml = injectImageDownloadButtons(withCid);
+      frame.srcdoc = finalHtml;
+
+      renderAttachments(message);
 
       loading?.classList.add("hidden");
       errorBox?.classList.add("hidden");
       view.classList.remove("hidden");
+
+      $("#download-message")?.addEventListener("click", () => downloadEml(message, id));
 
       $("#delete-message")?.addEventListener("click", async () => {
         try {
