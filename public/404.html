@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Page not found — ZMAIL Drop">
+  <meta name="theme-color" content="#07090d">
+  <title>404 — Lost in the void · ZMAIL Drop</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    /* ============ 404 PAGE — ZMAIL DROP ============ */
+    body[data-page="404"] {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    .nf-shell {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      padding: 60px 20px 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .nf-card {
+      width: min(720px, 100%);
+      padding: 56px 40px 48px;
+      border-radius: 30px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nf-card::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 32px;
+      padding: 1px;
+      background: linear-gradient(135deg,
+        rgba(139,124,255,.5),
+        rgba(85,230,255,.4),
+        rgba(139,124,255,.15));
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+      pointer-events: none;
+      opacity: .9;
+    }
+
+    .nf-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 7px 14px;
+      border: 1px solid rgba(85,230,255,.25);
+      background: rgba(85,230,255,.05);
+      border-radius: 99px;
+      color: var(--cyan);
+      font: 700 10px "Space Grotesk", sans-serif;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      margin-bottom: 26px;
+    }
+
+    .nf-badge i {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--danger);
+      box-shadow: 0 0 12px rgba(255,99,120,.9);
+      animation: nfPulse 1.6s ease-in-out infinite;
+    }
+    @keyframes nfPulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%     { opacity: .4; transform: scale(.7); }
+    }
+
+    .nf-code {
+      font: 800 clamp(96px, 20vw, 180px)/0.9 "Space Grotesk", sans-serif;
+      letter-spacing: -.06em;
+      margin: 0;
+      background: linear-gradient(135deg, #ffffff 0%, var(--cyan) 55%, var(--primary) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      position: relative;
+      filter: drop-shadow(0 0 40px rgba(85,230,255,.28));
+    }
+    .nf-code::after {
+      content: "404";
+      position: absolute;
+      inset: 0;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(85,230,255,.08);
+      filter: blur(12px);
+      z-index: -1;
+    }
+
+    .nf-title {
+      font: 700 clamp(24px, 3.4vw, 38px)/1.15 "Space Grotesk", sans-serif;
+      letter-spacing: -.03em;
+      margin: 14px 0 12px;
+    }
+    .nf-title em {
+      font-style: normal;
+      background: linear-gradient(90deg, #fff, var(--cyan));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .nf-text {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+      max-width: 480px;
+      margin: 0 auto 34px;
+    }
+    .nf-text code {
+      font: 600 12px "Space Grotesk", monospace;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: rgba(85,230,255,.08);
+      border: 1px solid rgba(85,230,255,.18);
+      color: var(--cyan);
+      overflow-wrap: anywhere;
+    }
+
+    .nf-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .nf-actions .button {
+      min-width: 150px;
+    }
+
+    .nf-meta {
+      margin-top: 40px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: center;
+      gap: 26px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font: 700 10px "Space Grotesk", sans-serif;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+    .nf-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .nf-meta b {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .nf-footer {
+      padding: 26px 0 34px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+      position: relative;
+      z-index: 1;
+    }
+    .nf-footer a {
+      color: var(--cyan);
+      font-weight: 700;
+    }
+
+    /* Animated ambient orbs */
+    .nf-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(110px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: .32;
+    }
+    .nf-orb-a {
+      width: 460px; height: 460px;
+      background: #7d5cff;
+      top: -140px; left: -120px;
+      animation: nfFloat 14s ease-in-out infinite;
+    }
+    .nf-orb-b {
+      width: 420px; height: 420px;
+      background: #1ecfe7;
+      bottom: -160px; right: -140px;
+      animation: nfFloat 18s ease-in-out infinite reverse;
+    }
+    .nf-orb-c {
+      width: 300px; height: 300px;
+      background: #ff6378;
+      top: 40%; left: 50%;
+      transform: translate(-50%,-50%);
+      opacity: .1;
+      animation: nfFloat 22s ease-in-out infinite;
+    }
+    @keyframes nfFloat {
+      0%,100% { transform: translate(0,0); }
+      50%     { transform: translate(30px,-40px); }
+    }
+
+    @media (max-width: 600px) {
+      .nf-card { padding: 40px 22px 34px; border-radius: 24px; }
+      .nf-badge { font-size: 9px; letter-spacing: .18em; padding: 6px 11px; margin-bottom: 20px; }
+      .nf-code { font-size: clamp(84px, 26vw, 130px); }
+      .nf-title { font-size: 22px; }
+      .nf-text { font-size: 13px; margin-bottom: 26px; }
+      .nf-actions { flex-direction: column; }
+      .nf-actions .button { width: 100%; }
+      .nf-meta { gap: 14px; margin-top: 30px; padding-top: 18px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .nf-orb-a, .nf-orb-b, .nf-orb-c, .nf-badge i { animation: none; }
+    }
+  </style>
+</head>
+<body data-page="404">
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+  <div class="nf-orb nf-orb-a"></div>
+  <div class="nf-orb nf-orb-b"></div>
+  <div class="nf-orb nf-orb-c"></div>
+  <div class="site-progress"></div>
+
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="ZMAIL Drop home">
+      <span class="brand-mark">Z</span>
+      <span><strong>ZMAIL</strong><small>DROP</small></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <a href="/">Home</a>
+      <a href="/login.html">New mailbox</a>
+      <a href="/#features">Features</a>
+      <a href="/owner.html" class="nav-cta">Developer</a>
+    </nav>
+    <div class="topbar-meta">
+      <span class="live-dot"></span><span data-lagos-clock>--:--:--</span>
+    </div>
+    <button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false" data-menu-toggle>
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <aside class="mobile-menu" data-mobile-menu aria-hidden="true">
+    <div class="menu-head">
+      <span>MENU</span>
+      <button type="button" class="icon-button" data-menu-close aria-label="Close menu">×</button>
+    </div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/login.html">New mailbox</a>
+      <a href="/#features">Features</a>
+      <a href="/owner.html">Developer <span>↗</span></a>
+    </nav>
+    <div class="menu-section">
+      <span class="menu-label">SYSTEM</span>
+      <p>Page not found. The route you tried doesn't exist — try one of the buttons above.</p>
+    </div>
+  </aside>
+  <div class="menu-backdrop" data-menu-close></div>
+
+  <main class="nf-shell">
+    <section class="nf-card glass reveal">
+      <span class="nf-badge"><i></i> ERROR · 404 · ROUTE NOT FOUND</span>
+
+      <h1 class="nf-code">404</h1>
+      <h2 class="nf-title">You've drifted <em>off the map</em>.</h2>
+
+      <p class="nf-text">
+        The page <code data-nf-path>/unknown</code> doesn't exist on ZMAIL Drop —
+        or it may have been moved, expired, or never existed at all.
+        Happens to the best of us. Let's get you back on track.
+      </p>
+
+      <div class="nf-actions">
+        <button class="button button-ghost" type="button" data-nf-back>
+          ← Go Back
+        </button>
+        <a class="button button-primary" href="/">
+          ⌂ Home
+        </a>
+        <a class="button button-ghost" href="/owner.html">
+          Developer ↗
+        </a>
+      </div>
+
+      <div class="nf-meta">
+        <span>STATUS <b>404</b></span>
+        <span>TIME <b data-lagos-clock>--:--:--</b></span>
+        <span>SYSTEM <b>ONLINE</b></span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="nf-footer">
+    © <span data-year-range>2025</span> ZMAIL Drop · A Zikky Tech project ·
+    Built by <a href="/owner.html">Dev Zikky</a>
+  </footer>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script src="/js/clock.js" defer></script>
+  <script src="/js/hamburger.js" defer></script>
+  <script src="/js/ui.js" defer></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Show the actual path the user tried to reach
+      const pathEl = document.querySelector("[data-nf-path]");
+      if (pathEl) pathEl.textContent = window.location.pathname + window.location.search;
+
+      // Go Back button — history.back() with fallback to home
+      const backBtn = document.querySelector("[data-nf-back]");
+      if (backBtn) {
+        backBtn.addEventListener("click", () => {
+          if (window.history.length > 1) {
+            window.history.back();
+          } else {
+            window.location.href = "/";
+          }
+        });
+      }
+
+      // Document title mirrors the bad path for clarity in browser tabs
+      document.title = "404 · " + window.location.pathname + " · ZMAIL Drop";
+    });
+  </script>
+</body>
+</html>
+
