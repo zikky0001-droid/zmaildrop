@@ -241,6 +241,260 @@
       .dev-cta .actions { width: 100%; }
       .dev-cta .actions .button { flex: 1; }
     }
+  
+    /* ============================================================
+       LIVE STATS + MOBILE-ONLY FIXES (PC mode untouched)
+       ============================================================ */
+    .live-stats-panel {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 14px;
+      margin: 28px 0 0;
+      width: 100%;
+    }
+    .live-stats-card {
+      padding: 26px 22px;
+      border-radius: 22px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .live-stats-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(85,230,255,.1), transparent 60%);
+      pointer-events: none;
+    }
+    .live-stats-card .stat-label {
+      display: block;
+      color: var(--cyan);
+      font: 700 11px "Space Grotesk", sans-serif;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .live-stats-card .stat-value {
+      font: 800 clamp(36px, 8vw, 64px)/1 "Space Grotesk", sans-serif;
+      letter-spacing: -.04em;
+      background: linear-gradient(90deg, #fff, var(--cyan));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .live-stats-card .live-last-hit {
+      font-size: clamp(16px, 3.5vw, 24px) !important;
+      letter-spacing: -.02em;
+    }
+    .live-stats-card .stat-meta {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+    .live-stats-card .stat-pulse {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 0 0 rgba(76,221,160,.55);
+      animation: pulse 1.8s ease-out infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    .live-refresh-btn {
+      margin-top: 18px;
+      width: 100%;
+      max-width: 220px;
+    }
+
+    /* ========== MOBILE ONLY — do not affect PC ========== */
+    @media (max-width: 900px) {
+      html, body {
+        max-width: 100%;
+        overflow-x: hidden !important;
+      }
+
+      .section-shell {
+        width: min(calc(100% - 20px), 1160px) !important;
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      .dev-hero {
+        padding: 50px 0 24px !important;
+      }
+      .dev-hero h1 {
+        font-size: clamp(28px, 9vw, 42px) !important;
+        line-height: 1.1 !important;
+        word-break: break-word;
+      }
+      .dev-hero p {
+        font-size: 14px !important;
+        padding: 0 4px;
+      }
+      .dev-hero .hero-actions {
+        flex-direction: column !important;
+        width: 100%;
+      }
+      .dev-hero .hero-actions .button {
+        width: 100%;
+      }
+
+      .dev-stats {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+      }
+      .dev-stat {
+        padding: 16px 10px !important;
+      }
+      .dev-stat strong {
+        font-size: 22px !important;
+      }
+
+      /* Live stats: always stacked on mobile */
+      .live-stats-panel {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+      }
+      .live-stats-card {
+        padding: 22px 16px !important;
+      }
+      .live-stats-card .stat-value {
+        font-size: clamp(40px, 14vw, 56px) !important;
+      }
+      .live-refresh-btn {
+        max-width: 100% !important;
+      }
+
+      /* Layout: single column */
+      .dev-layout {
+        grid-template-columns: 1fr !important;
+        gap: 18px !important;
+        margin-top: 36px !important;
+      }
+
+      /* TOC: vertical stack of chips, fully visible, scrollable if needed */
+      .dev-toc {
+        position: static !important;
+        width: 100% !important;
+        padding: 16px !important;
+        border-radius: 18px !important;
+      }
+      .dev-toc h4 {
+        width: 100%;
+        margin-bottom: 12px !important;
+      }
+      .dev-toc ol {
+        display: flex !important;
+        flex-direction: column !important;
+        flex-wrap: nowrap !important;
+        gap: 6px !important;
+        width: 100% !important;
+      }
+      .dev-toc li {
+        margin: 0 !important;
+        width: 100% !important;
+      }
+      .dev-toc a {
+        display: flex !important;
+        width: 100% !important;
+        padding: 12px 14px !important;
+        border: 1px solid var(--line) !important;
+        border-radius: 12px !important;
+        background: rgba(255,255,255,.03) !important;
+        font-size: 13px !important;
+        box-sizing: border-box !important;
+      }
+      .dev-toc a::before {
+        display: none !important;
+      }
+
+      /* Code blocks: allow horizontal scroll, never cut off page */
+      .code-block {
+        font-size: 11px !important;
+        padding: 12px 14px !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100% !important;
+        white-space: pre !important;
+      }
+      .endpoint {
+        padding: 18px 14px !important;
+        overflow: hidden;
+      }
+      .endpoint-head code {
+        font-size: 12px !important;
+        word-break: break-all !important;
+      }
+      .endpoint-desc {
+        font-size: 13px !important;
+      }
+
+      /* Notes / tips */
+      .note {
+        font-size: 12px !important;
+        padding: 12px 14px !important;
+        overflow-wrap: anywhere;
+      }
+
+      /* Error table already has mobile rules; reinforce */
+      .error-table {
+        font-size: 11px !important;
+      }
+
+      /* Tabs */
+      .tabs-nav {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* CTA */
+      .dev-cta {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        padding: 24px 18px !important;
+        gap: 18px !important;
+      }
+      .dev-cta .actions {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+      }
+      .dev-cta .actions .button {
+        width: 100% !important;
+      }
+
+      /* Model grid */
+      .model-grid {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* Prevent any child from causing page-wide horizontal scroll */
+      .docs-section,
+      .endpoint,
+      .endpoint-body,
+      .code-block,
+      .response-wrap,
+      .note {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .dev-stats {
+        grid-template-columns: 1fr 1fr !important;
+      }
+      .dev-hero h1 {
+        font-size: 28px !important;
+      }
+    }
+
   </style>
 </head>
 <body data-page="developers">
@@ -294,17 +548,20 @@
         <div class="dev-stat glass"><strong>$0</strong><span>Forever</span></div>
       </div>
 
-      <!-- LIVE TOTAL REQUESTS — auto-refreshes every 10 seconds -->
+      <!-- LIVE STATS — manual refresh only -->
       <div class="live-stats-panel reveal">
         <div class="live-stats-card glass">
           <span class="stat-label"><span class="stat-pulse"></span> Total API Requests</span>
           <div class="stat-value" id="live-total-requests">—</div>
-          <span class="stat-meta" id="live-stats-meta">Fetching live stats…</span>
+          <span class="stat-meta" id="live-stats-meta">Tap the Refresh button to load current stats</span>
+          <button type="button" id="refresh-stats-btn" class="button button-primary live-refresh-btn">
+            ↻ Refresh stats
+          </button>
         </div>
         <div class="live-stats-card glass">
           <span class="stat-label">Last Hit</span>
-          <div class="stat-value" style="font-size:clamp(18px,4.5vw,28px);letter-spacing:-.02em" id="live-last-hit">—</div>
-          <span class="stat-meta">Refreshes every 10 seconds · Africa/Lagos</span>
+          <div class="stat-value live-last-hit" id="live-last-hit">—</div>
+          <span class="stat-meta">Africa/Lagos · only updates when you tap Refresh</span>
         </div>
       </div>
     </section>
@@ -904,12 +1161,13 @@ Retry-After: <span class="n">43</span>                     <span class="c"># onl
   </script>
 
   <script>
-    /* Live Total Requests — poll /api/v1/health every 10s */
+    /* Manual stats refresh only — no auto interval */
     (function () {
       const totalEl = document.getElementById("live-total-requests");
       const lastEl  = document.getElementById("live-last-hit");
       const metaEl  = document.getElementById("live-stats-meta");
-      if (!totalEl) return;
+      const btn     = document.getElementById("refresh-stats-btn");
+      if (!totalEl || !btn) return;
 
       function formatNumber(n) {
         return new Intl.NumberFormat("en-US").format(n);
@@ -926,20 +1184,31 @@ Retry-After: <span class="n">43</span>                     <span class="c"># onl
       }
 
       async function refreshStats() {
+        btn.disabled = true;
+        const prev = btn.textContent;
+        btn.textContent = "Loading…";
+        if (metaEl) metaEl.textContent = "Fetching current stats…";
+
         try {
           const res = await fetch("/api/v1/health", { headers: { Accept: "application/json" } });
           const json = await res.json();
           const stats = json?.data?.stats || {};
           totalEl.textContent = formatNumber(stats.total_requests ?? 0);
           if (lastEl) lastEl.textContent = formatTime(stats.last_hit_at);
-          if (metaEl) metaEl.textContent = "Live · updated just now";
+          if (metaEl) metaEl.textContent = "Updated just now · tap Refresh for latest";
         } catch (err) {
-          if (metaEl) metaEl.textContent = "Could not reach health endpoint";
+          if (metaEl) metaEl.textContent = "Could not reach health endpoint. Try again.";
+        } finally {
+          btn.disabled = false;
+          btn.textContent = prev || "↻ Refresh stats";
         }
       }
 
+      // Load once on page open
       refreshStats();
-      setInterval(refreshStats, 10000);
+
+      // Only update again when the user taps the button
+      btn.addEventListener("click", refreshStats);
     })();
   </script>
 </body>
