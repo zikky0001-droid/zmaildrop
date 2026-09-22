@@ -1,14 +1,18 @@
 {
   "version": 2,
   "cleanUrls": true,
-  "rewrites": [
-    { "source": "/login", "destination": "/login.html" },
-    { "source": "/inbox", "destination": "/inbox.html" },
-    { "source": "/view", "destination": "/view.html" }
-  ],
+  "trailingSlash": false,
   "functions": {
     "api/maildrop.js": {
       "maxDuration": 10
     }
-  }
+  },
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/login", "dest": "/login.html" },
+    { "src": "/inbox", "dest": "/inbox.html" },
+    { "src": "/view",  "dest": "/view.html" },
+    { "src": "/(.*)",  "dest": "/404.html", "status": 404 }
+  ]
 }
+
