@@ -60,30 +60,36 @@
     return data;
   }
 
+  // Fixed: always send mailbox on the first request (no more 400 fallback)
   async function getInbox(mailbox) {
-    return api("inbox", { body: undefined, headers: {}, method: "GET" })
-      .catch(async firstError => {
-        if (firstError) {
-          const response = await fetch(`/api/maildrop?action=inbox&mailbox=${encodeURIComponent(mailbox)}`, {
-            headers: { Accept: "application/json" }
-          });
-          const text = await response.text();
-          let data;
-          try { data = text ? JSON.parse(text) : {}; } catch { data = { error: text }; }
-          if (!response.ok) throw new Error(data.error || data.message || `Request failed (${response.status})`);
-          return data;
-        }
-      });
+    const response = await fetch(
+      `/api/maildrop?action=inbox&mailbox=${encodeURIComponent(mailbox)}`,
+      { headers: { Accept: "application/json" } }
+    );
+    const text = await response.text();
+    let data;
+    try { data = text ? JSON.parse(text) : {}; }
+    catch { data = { error: text || "Unexpected server response." }; }
+
+    if (!response.ok) {
+      throw new Error(data.error || data.message || `Request failed (${response.status})`);
+    }
+    return data;
   }
 
   async function getMessage(mailbox, id) {
-    const response = await fetch(`/api/maildrop?action=message&mailbox=${encodeURIComponent(mailbox)}&id=${encodeURIComponent(id)}`, {
-      headers: { Accept: "application/json" }
-    });
+    const response = await fetch(
+      `/api/maildrop?action=message&mailbox=${encodeURIComponent(mailbox)}&id=${encodeURIComponent(id)}`,
+      { headers: { Accept: "application/json" } }
+    );
     const text = await response.text();
     let data;
-    try { data = text ? JSON.parse(text) : {}; } catch { data = { error: text }; }
-    if (!response.ok) throw new Error(data.error || data.message || `Request failed (${response.status})`);
+    try { data = text ? JSON.parse(text) : {}; }
+    catch { data = { error: text || "Unexpected server response." }; }
+
+    if (!response.ok) {
+      throw new Error(data.error || data.message || `Request failed (${response.status})`);
+    }
     return data;
   }
 
@@ -111,8 +117,16 @@
     return message.subject || message.Subject || "(No subject)";
   }
 
+  // Fixed: now includes headerfrom (what the Maildrop API actually returns)
   function messageFrom(message) {
-    return message.from?.address || message.from || message.sender || message.From || "Unknown sender";
+    return (
+      message.headerfrom ||
+      message.from?.address ||
+      message.from ||
+      message.sender ||
+      message.From ||
+      "Unknown sender"
+    );
   }
 
   function messageDate(message) {
@@ -156,6 +170,7 @@
 
     loading?.classList.remove("hidden");
     empty?.classList.add("hidden");
+    if (list) list.innerHTML = "";
     if (alert) { alert.style.display = "none"; alert.textContent = ""; }
 
     try {
@@ -280,6 +295,11 @@
     $("#back-button")?.addEventListener("click", () => { window.location.href = backUrl; });
     $("#error-back")?.addEventListener("click", () => { window.location.href = backUrl; });
 
+    // Start in clean state
+    loading?.classList.remove("hidden");
+    errorBox?.classList.add("hidden");
+    view.classList.add("hidden");
+
     if (!mailbox || !id || !validMailbox(mailbox)) {
       loading?.classList.add("hidden");
       view.classList.add("hidden");
@@ -292,7 +312,15 @@
       const message = data.message || data.data || data;
 
       $("#view-subject").textContent = message.subject || "(No subject)";
-      $("#view-from").textContent = message.from?.address || message.from || message.sender || "Unknown sender";
+
+      // Fixed: use headerfrom (API field)
+      $("#view-from").textContent =
+        message.headerfrom ||
+        message.from?.address ||
+        message.from ||
+        message.sender ||
+        "Unknown sender";
+
       $("#view-date").textContent = formatDate(message.date || message.createdAt || message.timestamp);
 
       const frame = $("#email-frame");
