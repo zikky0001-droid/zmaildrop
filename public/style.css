@@ -775,7 +775,7 @@ button, input { font: inherit; }
   .spinner { animation: none; }
 }
 
-/* ============ ZMAIL DROP v2 — UI boost additions ============ */
+/* ============ ZMAIL DROP — UI boost additions ============ */
 .site-progress { transform: scaleX(0); transform-origin: 0 50%; will-change: transform; }
 
 .pulse {

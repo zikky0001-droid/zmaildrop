@@ -784,7 +784,7 @@ button, input { font: inherit; }
   .spinner { animation: none; }
 }
 
-/* ============ ZMAIL DROP v2 — UI boost additions ============ */
+/* ============ ZMAIL DROP v1 — UI boost additions ============ */
 .site-progress { transform: scaleX(0); transform-origin: 0 50%; will-change: transform; }
 
 .pulse {
@@ -2119,9 +2119,9 @@ curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-n
           <span class="eyebrow">02 / OVERVIEW</span>
           <h2>How the API works.</h2>
           <p>
-            ZMAIL Drop is a thin, cached proxy over Maildrop's public inboxes.
-            Every request is rate limited, throttled, and cached to protect the upstream —
-            but from your side, it's just clean JSON over HTTPS.
+            ZMAIL Drop is a thin, cached proxy over public @maildrop.cc inboxes.
+            Every request is rate limited, throttled, and cached to protect the upstream server —
+            but from your side, it's just clean JSON over HTTPS 💡.
           </p>
 
           <div class="endpoint glass">
@@ -2263,8 +2263,8 @@ curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-n
                 <div class="code-block">{
   <span class="s">"ok"</span>: <span class="b">true</span>,
   <span class="s">"data"</span>: {
-    <span class="s">"mailbox"</span>: <span class="s">"1"</span>,
-    <span class="s">"address"</span>: <span class="s">"1@maildrop.cc"</span>,
+    <span class="s">"mailbox"</span>: <span class="s">"any-name"</span>,
+    <span class="s">"address"</span>: <span class="s">"any-name@maildrop.cc"</span>,
     <span class="s">"count"</span>: <span class="n">7</span>,
     <span class="s">"messages"</span>: [
       {
@@ -2337,8 +2337,8 @@ curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-n
                 <div class="code-block">{
   <span class="s">"ok"</span>: <span class="b">true</span>,
   <span class="s">"data"</span>: {
-    <span class="s">"mailbox"</span>: <span class="s">"1"</span>,
-    <span class="s">"address"</span>: <span class="s">"1@maildrop.cc"</span>,
+    <span class="s">"mailbox"</span>: <span class="s">"any-name"</span>,
+    <span class="s">"address"</span>: <span class="s">"any-name@maildrop.cc"</span>,
     <span class="s">"message"</span>: {
       <span class="s">"id"</span>: <span class="s">"pH6k1fyokk"</span>,
       <span class="s">"from"</span>: <span class="s">"Tactical &lt;support@tacticalusa.com&gt;"</span>,
@@ -2365,8 +2365,8 @@ curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-n
                 <div class="code-block">{
   <span class="s">"ok"</span>: <span class="b">true</span>,
   <span class="s">"data"</span>: {
-    <span class="s">"mailbox"</span>: <span class="s">"2"</span>,
-    <span class="s">"address"</span>: <span class="s">"2@maildrop.cc"</span>,
+    <span class="s">"mailbox"</span>: <span class="s">"any-name"</span>,
+    <span class="s">"address"</span>: <span class="s">"any-name@maildrop.cc"</span>,
     <span class="s">"message"</span>: {
       <span class="s">"id"</span>: <span class="s">"XDM5OW4eUC"</span>,
       <span class="s">"from"</span>: <span class="s">"Isaac Achor &lt;achorisaac827@gmail.com&gt;"</span>,
@@ -2402,7 +2402,7 @@ curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-n
             </div>
             <p class="endpoint-desc">
               Permanently removes a message from the mailbox. Invalidates any cached views of that
-              mailbox and message. Deletion is final — Maildrop has no trash.
+              mailbox and message. Deletion is final — ZMail Drop has no trash recovery policy or endpoint.
             </p>
             <div class="endpoint-body">
               <div class="code-block" data-copy>curl -s -X DELETE <span class="s">"https://zmaildrop.vercel.app/api/v1/message?mailbox=any-name&amp;id=pH6k1fyokk"</span> | jq</div>
@@ -2427,7 +2427,7 @@ curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-n
               </details>
 
               <div class="note">
-                <b>Heads up:</b> Maildrop's list index can lag a few seconds behind a delete.
+                <b>Heads up:</b> ZMail Drop list index can lag a few seconds behind a delete.
                 A subsequent inbox call may still show the deleted message for a moment — that's upstream behavior, not a bug.
               </div>
 
@@ -2491,7 +2491,7 @@ curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-n
 
             <div class="tabs-panel active" data-panel="js">
               <div class="code-block" data-copy><span class="c">// Fetch and print every message in a mailbox</span>
-<span class="k">const</span> res = <span class="k">await</span> <span class="p">fetch</span>(<span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=2"</span>);
+<span class="k">const</span> res = <span class="k">await</span> <span class="p">fetch</span>(<span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-name"</span>);
 <span class="k">const</span> json = <span class="k">await</span> res.<span class="p">json</span>();
 
 <span class="k">if</span> (!json.ok) <span class="k">throw new</span> <span class="p">Error</span>(json.error.message);
@@ -2504,7 +2504,7 @@ curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-n
             <div class="tabs-panel" data-panel="py">
               <div class="code-block" data-copy><span class="k">import</span> requests
 
-r = requests.<span class="p">get</span>(<span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=2"</span>)
+r = requests.<span class="p">get</span>(<span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-name"</span>)
 data = r.<span class="p">json</span>()
 
 <span class="k">if</span> data[<span class="s">"ok"</span>]:
@@ -2514,13 +2514,13 @@ data = r.<span class="p">json</span>()
 
             <div class="tabs-panel" data-panel="curl">
               <div class="code-block" data-copy><span class="c"># List inbox</span>
-curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=2"</span> | jq
+curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-name"</span> | jq
 
 <span class="c"># Read one message</span>
-curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/message?mailbox=2&amp;id=abc123"</span> | jq
+curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/message?mailbox=any-name&amp;id=abc123"</span> | jq
 
 <span class="c"># Delete one message</span>
-curl -s -X DELETE <span class="s">"https://zmaildrop.vercel.app/api/v1/message?mailbox=2&amp;id=abc123"</span> | jq</div>
+curl -s -X DELETE <span class="s">"https://zmaildrop.vercel.app/api/v1/message?mailbox=any-name&amp;id=abc123"</span> | jq</div>
             </div>
 
             <div class="tabs-panel" data-panel="node">
@@ -2528,7 +2528,7 @@ curl -s -X DELETE <span class="s">"https://zmaildrop.vercel.app/api/v1/message?m
 
 <span class="k">const</span> { data } = <span class="k">await</span> axios.<span class="p">get</span>(
   <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox"</span>,
-  { params: { mailbox: <span class="s">"2"</span> } }
+  { params: { mailbox: <span class="s">"any-name"</span> } }
 );
 
 <span class="k">if</span> (data.ok) {
@@ -2585,7 +2585,7 @@ Retry-After: <span class="n">43</span>                     <span class="c"># onl
               <tr><td><code>RATE_LIMITED</code></td><td><span class="status-mini s-429">429</span></td><td>You've hit 30 requests in 60 seconds.</td></tr>
               <tr><td><code>IP_BLACKLISTED</code></td><td><span class="status-mini s-429">429</span></td><td>Your IP is temporarily blocked for 5 minutes.</td></tr>
               <tr><td><code>UPSTREAM_BUSY</code></td><td><span class="status-mini s-503">503</span></td><td>Server queued too many concurrent upstream calls.</td></tr>
-              <tr><td><code>UPSTREAM_ERROR</code></td><td><span class="status-mini s-502">502</span></td><td>Maildrop itself returned an error.</td></tr>
+              <tr><td><code>UPSTREAM_ERROR</code></td><td><span class="status-mini s-502">502</span></td><td>ZMail Drop Server itself returned an error.</td></tr>
               <tr><td><code>CLEANUP_FAILED</code></td><td><span class="status-mini s-500">500</span></td><td>Only on <code>/cleanup</code>. Firestore write failure.</td></tr>
               <tr><td><code>UNAUTHORIZED</code></td><td><span class="status-mini s-400">401</span></td><td>Only on <code>/cleanup</code>. Missing or invalid <code>CRON_SECRET</code>.</td></tr>
             </tbody>
@@ -2604,7 +2604,7 @@ Retry-After: <span class="n">43</span>                     <span class="c"># onl
 <span class="status-mini s-405">405</span>  Method not allowed — wrong HTTP verb
 <span class="status-mini s-429">429</span>  Too many requests — rate limit or blacklist
 <span class="status-mini s-500">500</span>  Internal server error — cleanup failed
-<span class="status-mini s-502">502</span>  Bad gateway — Maildrop failed
+<span class="status-mini s-502">502</span>  Bad gateway — Zmail Drop Server failed
 <span class="status-mini s-503">503</span>  Service unavailable — upstream busy</div>
             </div>
           </div>
