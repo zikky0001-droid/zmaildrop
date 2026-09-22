@@ -6,9 +6,9 @@
 [![API](https://img.shields.io/badge/API-v1-8b7cff?style=flat-square)](https://zmaildrop.vercel.app/developers.html)
 [![License](https://img.shields.io/badge/license-MIT-4cdda0?style=flat-square)](LICENSE)
 [![Open Source](https://img.shields.io/badge/open%20source-yes-ffc55a?style=flat-square)](https://github.com/zikky0001-droid/zmaildrop)
-[![Built by](https://img.shields.io/badge/built%20by-Dev%20Zikky-8b7cff?style=flat-square)](https://zikkytech.xo.je)
+[![Built by](https://img.shields.io/badge/built%20by-DEV%20ZIKKY-8b7cff?style=flat-square)](https://github.com/zikky0001-droid/)
 
-A lightweight web app and public API for creating disposable email inboxes — no account, no password, no cost. Built by [Dev Zikky](https://zmaildrop.vercel.app/owner.html).
+A lightweight web app and public API for creating disposable email inboxes — no account, no password, no cost. Built by [DEV ZIKKY 🧑‍💻](https://zmaildrop.vercel.app/owner.html).
 
 </div>
 
