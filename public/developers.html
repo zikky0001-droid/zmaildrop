@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta name="description" content="ZMAIL Drop API — free temporary email inboxes for your apps, bots, and scripts. No auth, no signup, no cost.">
   <meta name="theme-color" content="#07090d">
   <title>ZMAIL Drop — Public API Documentation</title>
@@ -292,6 +292,20 @@
         <div class="dev-stat glass"><strong>30/min</strong><span>Rate limit</span></div>
         <div class="dev-stat glass"><strong>3s</strong><span>Cache TTL</span></div>
         <div class="dev-stat glass"><strong>$0</strong><span>Forever</span></div>
+      </div>
+
+      <!-- LIVE TOTAL REQUESTS — auto-refreshes every 10 seconds -->
+      <div class="live-stats-panel reveal">
+        <div class="live-stats-card glass">
+          <span class="stat-label"><span class="stat-pulse"></span> Total API Requests</span>
+          <div class="stat-value" id="live-total-requests">—</div>
+          <span class="stat-meta" id="live-stats-meta">Fetching live stats…</span>
+        </div>
+        <div class="live-stats-card glass">
+          <span class="stat-label">Last Hit</span>
+          <div class="stat-value" style="font-size:clamp(18px,4.5vw,28px);letter-spacing:-.02em" id="live-last-hit">—</div>
+          <span class="stat-meta">Refreshes every 10 seconds · Africa/Lagos</span>
+        </div>
       </div>
     </section>
 
@@ -888,7 +902,48 @@ Retry-After: <span class="n">43</span>                     <span class="c"># onl
       });
     });
   </script>
+
+  <script>
+    /* Live Total Requests — poll /api/v1/health every 10s */
+    (function () {
+      const totalEl = document.getElementById("live-total-requests");
+      const lastEl  = document.getElementById("live-last-hit");
+      const metaEl  = document.getElementById("live-stats-meta");
+      if (!totalEl) return;
+
+      function formatNumber(n) {
+        return new Intl.NumberFormat("en-US").format(n);
+      }
+      function formatTime(iso) {
+        if (!iso) return "—";
+        try {
+          return new Intl.DateTimeFormat("en-NG", {
+            timeZone: "Africa/Lagos",
+            dateStyle: "medium",
+            timeStyle: "medium"
+          }).format(new Date(iso));
+        } catch { return iso; }
+      }
+
+      async function refreshStats() {
+        try {
+          const res = await fetch("/api/v1/health", { headers: { Accept: "application/json" } });
+          const json = await res.json();
+          const stats = json?.data?.stats || {};
+          totalEl.textContent = formatNumber(stats.total_requests ?? 0);
+          if (lastEl) lastEl.textContent = formatTime(stats.last_hit_at);
+          if (metaEl) metaEl.textContent = "Live · updated just now";
+        } catch (err) {
+          if (metaEl) metaEl.textContent = "Could not reach health endpoint";
+        }
+      }
+
+      refreshStats();
+      setInterval(refreshStats, 10000);
+    })();
+  </script>
 </body>
+
 </html>
 
 
