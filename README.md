@@ -15,7 +15,7 @@ A lightweight web app and public API for creating disposable email inboxes — n
 ---
 
 ## 📖 What is ZMAIL Drop?
-
+```
 ZMAIL Drop gives anyone a fast, ephemeral email address in seconds. It's designed for:
 
 - One-time signups and confirmation codes
@@ -24,8 +24,291 @@ ZMAIL Drop gives anyone a fast, ephemeral email address in seconds. It's designe
 - Anything that shouldn't touch a real email account
 
 There's no account, no login, no tracking. You pick a mailbox name, and the ZMAIL Drop server assigns you an address. Everything is public and free — the whole stack is open source.
+```
+---
+
+`📄 README.md — Deployment & Configuration Section`
+
+Here's the complete, polished deployment + configuration section. Replace your existing "🚢 Deployment" section with this.
 
 ---
+
+
+## 🛠️ Built With
+
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+![Font Awesome](https://img.shields.io/badge/Font_Awesome-339AF0?style=for-the-badge&logo=fontawesome&logoColor=white)
+
+---
+
+## 🚢 Deploy to Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/zikky0001-droid/zmaildrop)
+
+---
+
+## 📦 How to Deploy
+
+### Option 1 — Deploy with Vercel (Recommended)
+
+The fastest path. No build step required — Vercel just serves the static files and runs your serverless functions.
+
+**Steps:**
+```
+1. Click the **Deploy with Vercel** button above, or go to [vercel.com/new](https://vercel.com/new) and import `zikky0001-droid/zmaildrop`.
+2. Vercel auto-detects the project as a static site + serverless functions.
+3. **Before clicking Deploy**, open **Environment Variables** and add the 4 required variables (see the [Configuration](#-configuration) section below).
+4. Click **Deploy**.
+5. Wait ~40 seconds. Your app is live at `https://<your-project>.vercel.app`.
+
+> ⚠️ **Do not deploy without setting the environment variables first.** The API will return `firebase: "disabled"` and rate limiting will fall back to in-memory only (which doesn't work across serverless instances).
+```
+---
+
+### Option 2 — Manual Deploy
+
+If you prefer the CLI or a different host.
+
+#### 2.1 — Using the Vercel CLI
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/zikky0001-droid/zmaildrop.git
+cd zmaildrop
+
+# 2. Install Vercel CLI (if not already installed)
+npm i -g vercel
+
+# 3. Log in to Vercel
+vercel login
+
+# 4. Add your environment variables
+vercel env add PROJECT_KEY
+vercel env add EMAIL_KEY
+vercel env add PRIVATE_KEY
+vercel env add CRON_SECRET
+
+# 5. Deploy to production
+vercel --prod
+```
+
+2.2 — Using Any Static Host (Netlify, Cloudflare Pages, GitHub Pages)
+```
+ZMAIL Drop is a plain static site with serverless functions. The frontend works on any host, but the /api/v1/* endpoints require Vercel (or a Node-compatible serverless runtime).
+
+If you only need the frontend:
+
+· Upload everything inside public/ to your host
+· Make sure vercel.json and package.json are at the repo root
+· Point your DNS or subdomain at the host
+
+Note: Without Vercel, the API endpoints won't run — you'd need to host them elsewhere (Cloudflare Workers, Netlify Functions, etc.) and update the frontend URLs accordingly.
+```
+---
+
+⚙️ Configuration
+
+`ZMAIL Drop needs Firebase (for rate limiting + stats) and a cron secret (for the daily cleanup). This section walks you through getting each one.`
+
+Step 1 — Create a Firebase Project
+```
+1. Go to console.firebase.google.com
+2. Click Add project
+3. Give it a name (e.g. zmaildrop-prod)
+4. Disable Google Analytics (optional)
+5. Click Create project and wait for it to finish
+```
+
+`Step 2 — Enable Firestore`
+
+```
+1. In the Firebase Console, open your new project
+2. Left sidebar → Build → Firestore Database
+3. Click Create database
+4. Choose Production mode (recommended — locks down access by default; your backend uses the Admin SDK which bypasses rules)
+5. Pick a location close to your users (e.g. nam5 for US, europe-west1 for Europe, asia-south1 for India)
+6. Click Enable
+```
+
+⚠️ Location cannot be changed later. Pick carefully.
+
+`Step 3 — Generate a Service Account Key`
+
+```
+1. In the Firebase Console, click the ⚙️ gear icon next to Project Overview
+2. Go to Project settings → Service accounts tab
+3. Make sure Firebase Admin SDK is selected
+4. Click Generate new private key
+5. Confirm — a JSON file downloads to your machine
+```
+
+Open the JSON file. It contains everything you need:
+
+```json
+{
+  "type": "service_account",
+  "project_id": "zmaildrop-prod",
+  "private_key_id": "abc...",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAAS...\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-xxxxx@zmaildrop-prod.iam.gserviceaccount.com",
+  "client_id": "1234567890",
+  ...
+}
+```
+```
+From this file, copy three values:
+
+What you need Which field in the JSON
+Firebase Project ID project_id
+Service Account Email client_email
+Private Key private_key (the whole value, including -----BEGIN... and ...END-----)
+```
+
+`Step 4 — Generate the Cron Secret`
+
+Run this in Termux (or any terminal):
+
+```bash
+echo "zmaildrop$(openssl rand -hex 12 | cut -c1-23)"
+```
+
+Example output:
+
+```
+zmaildropa3f8c2b9d1e6f4a7c8b2d5e
+```
+
+Save this — you'll need it in the next step.
+
+`Step 5 — Set Environment Variables`
+
+You now have 4 values ready:
+
+```
+PROJECT_KEY=<project_id from Firebase JSON>
+EMAIL_KEY=<client_email from Firebase JSON>
+PRIVATE_KEY=<private_key from Firebase JSON>
+CRON_SECRET=<the random string you just generated>
+```
+
+`🅰️ If deploying on Vercel (recommended)`
+```
+1. In your Vercel project, open Settings → Environment Variables
+2. Add each of the 4 variables:
+   · Name: PROJECT_KEY — Value: your project ID
+   · Name: EMAIL_KEY — Value: your service account email
+   · Name: PRIVATE_KEY — Value: the full private key
+   · Name: CRON_SECRET — Value: your random secret
+3. For each, tick Production, Preview, and Development
+4. Click Save for each one
+5. Go to Deployments → click the latest → Redeploy
+
+⚠️ For PRIVATE_KEY, paste the value with the literal \n characters as text. Do NOT press Enter to make real newlines. The code converts \n to real line breaks automatically.
+```
+
+`🅱️ If using GitHub Environment Variables (only for private repos)`
+```
+If your repo is private and you want CI/CD to inject secrets at build time:
+
+1. In GitHub, go to Settings → Secrets and variables → Actions
+2. Click New repository secret for each:
+   · PROJECT_KEY → your project ID
+   · EMAIL_KEY → your service account email
+   · PRIVATE_KEY → the full private key
+   · CRON_SECRET → your random secret
+3. Reference them in any .github/workflows/*.yml file using ${{ secrets.PROJECT_KEY }}
+```
+
+⚠️ Never use GitHub secrets on a public repo. Even though GitHub hides them from public view, forks and logs can leak them. If your repo is public, set env vars ONLY in Vercel.
+
+`Step 6 — Verify the Deployment`
+
+Once deployed, test the health endpoint:
+
+```bash
+curl -s "https://<your-project>.vercel.app/api/v1/health" | jq
+```
+
+You want to see:
+
+```json
+{
+  "ok": true,
+  "data": {
+    "service": "ZMAIL Drop API",
+    "version": "v1",
+    "status": "online",
+    "firebase": "connected",   ← ⬅ this is the important one
+    ...
+  }
+}
+```
+```
+If firebase shows "disabled", one of your 3 Firebase env vars is missing or misformatted. The most common issue is the PRIVATE_KEY — make sure it:
+
+· Includes -----BEGIN PRIVATE KEY----- and -----END PRIVATE KEY-----
+· Keeps the \n as literal text (no real newlines)
+· Is not wrapped in quotes
+```
+Step 7 — Enable the Daily Cleanup Cron
+
+The project ships with a cron job in vercel.json:
+
+```json
+{
+  "crons": [
+    { "path": "/api/v1/cleanup", "schedule": "0 23 * * *" }
+  ]
+}
+```
+
+This fires every day at 23:00 UTC = 00:00 Lagos (WAT). Vercel automatically sends the CRON_SECRET header — you don't need to do anything.
+
+To test it manually:
+
+```bash
+curl -s -H "Authorization: Bearer <your CRON_SECRET>" \
+  "https://<your-project>.vercel.app/api/v1/cleanup" | jq
+```
+
+Expected response:
+
+```json
+{
+  "ok": true,
+  "data": {
+    "cleaned": 12,
+    "batches": 1,
+    "collection": "rate_limits",
+    "note": "stats/global and system/upstream_lock were NOT touched."
+  }
+}
+```
+
+---
+
+🧾 Environment Variables at a Glance
+`
+Variable Where it comes from What it does
+PROJECT_KEY Firebase JSON → project_id Identifies your Firebase project
+EMAIL_KEY Firebase JSON → client_email Service account that writes to Firestore
+PRIVATE_KEY Firebase JSON → private_key Authenticates the service account
+CRON_SECRET Generated with openssl Protects /api/v1/cleanup from abuse
+`
+Where to set them:
+```
+Deployment Where env vars go
+Vercel (any repo) Vercel → Settings → Environment Variables ✅
+GitHub (private repo only) GitHub → Settings → Secrets and variables
+GitHub (public repo) ❌ Never use GitHub secrets — Vercel only
+Local development .env file (gitignored)
+
+```
 
 ## ✨ Features
 
