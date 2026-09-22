@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="ZMAIL Drop API — free temporary email inboxes for your apps, bots, and scripts.">
+  <meta name="theme-color" content="#07090d">
+  <title>ZMAIL Drop — Public API</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .dev-hero { padding: 80px 0 30px; text-align: center; }
+    .dev-hero h1 { font: 700 clamp(38px, 6vw, 68px)/1.05 "Space Grotesk"; letter-spacing: -.05em; margin: 14px 0; }
+    .dev-hero h1 span { background: linear-gradient(90deg, #fff, var(--cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .dev-hero p { color: var(--muted); font-size: 15px; max-width: 620px; margin: 0 auto; }
+    .endpoint { border-radius: 22px; padding: 28px; margin-bottom: 14px; }
+    .endpoint-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 12px; }
+    .verb { padding: 5px 11px; border-radius: 8px; font: 800 10px "Space Grotesk"; letter-spacing: .12em; }
+    .verb.get { background: rgba(76,221,160,.12); color: #a9e8cb; border: 1px solid rgba(76,221,160,.3); }
+    .verb.delete { background: rgba(255,99,120,.1); color: #ff8b9c; border: 1px solid rgba(255,99,120,.3); }
+    .endpoint-head code { font: 700 14px "Space Grotesk", monospace; color: var(--cyan); }
+    .endpoint p { color: var(--muted); font-size: 13px; margin: 0 0 14px; }
+    .code-block {
+      background: #070b11; border: 1px solid var(--line2); border-radius: 14px;
+      padding: 16px 18px; overflow-x: auto; position: relative;
+      font: 12px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: #cfd6e0; white-space: pre;
+    }
+    .code-block .copy {
+      position: absolute; top: 10px; right: 10px;
+      background: rgba(255,255,255,.05); border: 1px solid var(--line2);
+      color: var(--muted); font: 700 9px "Space Grotesk"; letter-spacing: .14em;
+      padding: 5px 9px; border-radius: 8px; cursor: pointer;
+    }
+    .code-block .copy:hover { color: var(--text); border-color: rgba(255,255,255,.25); }
+    .code-block .k { color: #c792ea; } .code-block .s { color: #a9e8cb; }
+    .code-block .c { color: #6b7480; font-style: italic; } .code-block .n { color: #ffc55a; }
+    .code-block .p { color: #8bd5ff; }
+    .dev-cta {
+      display: flex; justify-content: space-between; align-items: center; gap: 30px;
+      padding: 32px 34px; border-radius: 26px; margin: 60px auto 90px;
+    }
+    .dev-cta h2 { font: 700 24px "Space Grotesk"; margin: 0 0 4px; }
+    .dev-cta p { color: var(--muted); font-size: 13px; margin: 0; max-width: 520px; }
+    .dev-cta .actions { display: flex; gap: 10px; flex-shrink: 0; }
+    @media (max-width: 850px) {
+      .dev-cta { flex-direction: column; align-items: flex-start; }
+      .dev-cta .actions { width: 100%; }
+      .dev-cta .actions .button { flex: 1; }
+    }
+  </style>
+</head>
+<body data-page="developers">
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+  <div class="site-progress"></div>
+
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="ZMAIL Drop home"><span class="brand-mark">Z</span><span><strong>ZMAIL</strong><small>DROP</small></span></a>
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <a href="/">Home</a>
+      <a href="/login.html">New mailbox</a>
+      <a href="/#features">Features</a>
+      <a href="/owner.html" class="nav-cta">Developer</a>
+    </nav>
+    <div class="topbar-meta"><span class="live-dot"></span><span data-lagos-clock>--:--:--</span></div>
+    <button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false" data-menu-toggle><span></span><span></span><span></span></button>
+  </header>
+
+  <aside class="mobile-menu" data-mobile-menu aria-hidden="true">
+    <div class="menu-head"><span>MENU</span><button type="button" class="icon-button" data-menu-close aria-label="Close menu">×</button></div>
+    <nav><a href="/">Home</a><a href="/login.html">New mailbox</a><a href="/#features">Features</a><a href="/owner.html">Developer <span>↗</span></a></nav>
+  </aside>
+  <div class="menu-backdrop" data-menu-close></div>
+
+  <main class="section-shell">
+    <section class="dev-hero reveal">
+      <span class="badge">REST · JSON · FREE · NO AUTH</span>
+      <h1>ZMAIL Drop <span>Public API</span></h1>
+      <p>Query temporary inboxes, read messages, and delete them — from your apps, bots, or scripts. No signup, no API key, no cost. Rate limit: 30 requests/minute per IP.</p>
+      <div class="hero-actions" style="justify-content:center">
+        <a class="button button-primary" href="#endpoints">Browse endpoints ↓</a>
+        <a class="button button-ghost" href="#quickstart">Quick start</a>
+      </div>
+    </section>
+
+    <section id="quickstart" class="section-heading reveal" style="margin-top:60px">
+      <span class="eyebrow">QUICK START</span>
+      <h2>One curl. That's it.</h2>
+    </section>
+
+    <div class="code-block reveal" data-copy>
+<span class="c"># List all messages in mailbox "2"</span>
+curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=2"</span>
+    </div>
+
+    <section id="endpoints" class="section-heading reveal" style="margin-top:80px">
+      <span class="eyebrow">ENDPOINTS</span>
+      <h2>Everything the API does.</h2>
+    </section>
+
+    <article class="endpoint glass reveal">
+      <div class="endpoint-head"><span class="verb get">GET</span><code>/api/v1/health</code></div>
+      <p>Status check. Confirms the service is online and whether Firebase is connected.</p>
+      <div class="code-block" data-copy>curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/health"</span></div>
+    </article>
+
+    <article class="endpoint glass reveal">
+      <div class="endpoint-head"><span class="verb get">GET</span><code>/api/v1/domains</code></div>
+      <p>Lists the domains this API can receive mail on.</p>
+      <div class="code-block" data-copy>curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/domains"</span></div>
+    </article>
+
+    <article class="endpoint glass reveal">
+      <div class="endpoint-head"><span class="verb get">GET</span><code>/api/v1/inbox?mailbox=:name</code></div>
+      <p>Lists all messages in a mailbox. Results are cached for 3 seconds to protect the upstream.</p>
+      <div class="code-block" data-copy>curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=2"</span></div>
+    </article>
+
+    <article class="endpoint glass reveal">
+      <div class="endpoint-head"><span class="verb get">GET</span><code>/api/v1/message?mailbox=:name&amp;id=:id</code></div>
+      <p>Reads a single message by ID, including the raw MIME <code>data</code> field for attachment parsing.</p>
+      <div class="code-block" data-copy>curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/message?mailbox=2&amp;id=rvRN00Odx3"</span></div>
+    </article>
+
+    <article class="endpoint glass reveal">
+      <div class="endpoint-head"><span class="verb delete">DELETE</span><code>/api/v1/message?mailbox=:name&amp;id=:id</code></div>
+      <p>Permanently removes a message from the mailbox.</p>
+      <div class="code-block" data-copy>curl -s -X DELETE <span class="s">"https://zmaildrop.vercel.app/api/v1/message?mailbox=2&amp;id=rvRN00Odx3"</span></div>
+    </article>
+
+    <section class="section-heading reveal" style="margin-top:80px">
+      <span class="eyebrow">CLIENT EXAMPLES</span>
+      <h2>JavaScript &amp; Python.</h2>
+    </section>
+
+    <div class="code-block reveal" data-copy><span class="k">const</span> res = <span class="k">await</span> <span class="p">fetch</span>(<span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=2"</span>);
+<span class="k">const</span> json = <span class="k">await</span> res.<span class="p">json</span>();
+<span class="k">if</span> (json.ok) {
+  <span class="k">for</span> (<span class="k">const</span> msg <span class="k">of</span> json.data.messages) {
+    console.<span class="p">log</span>(msg.subject, msg.headerfrom);
+  }
+}</div>
+
+    <div class="code-block reveal" data-copy style="margin-top:14px"><span class="k">import</span> requests
+r = requests.<span class="p">get</span>(<span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=2"</span>)
+data = r.<span class="p">json</span>()
+<span class="k">if</span> data[<span class="s">"ok"</span>]:
+    <span class="k">for</span> msg <span class="k">in</span> data[<span class="s">"data"</span>][<span class="s">"messages"</span>]:
+        <span class="p">print</span>(msg[<span class="s">"subject"</span>], <span class="s">"-"</span>, msg[<span class="s">"headerfrom"</span>])</div>
+
+    <section class="section-heading reveal" style="margin-top:80px">
+      <span class="eyebrow">LIMITS &amp; HEADERS</span>
+      <h2>Fair use, clearly stated.</h2>
+    </section>
+
+    <article class="endpoint glass reveal">
+      <p style="margin-bottom:14px">
+        <strong style="color:var(--text)">30 requests / minute per IP.</strong>
+        Exceeding this blacklists your IP for <strong style="color:var(--text)">5 minutes</strong>.
+        Every response includes standard rate-limit headers:
+      </p>
+      <div class="code-block">
+X-RateLimit-Limit: <span class="n">30</span>
+X-RateLimit-Remaining: <span class="n">14</span>
+X-RateLimit-Reset: <span class="n">1758550830</span>     <span class="c"># unix seconds</span>
+Retry-After: <span class="n">43</span>                     <span class="c"># only on 429</span>
+      </div>
+    </article>
+
+    <section class="section-heading reveal" style="margin-top:80px">
+      <span class="eyebrow">ERROR CODES</span>
+      <h2>What can go wrong.</h2>
+    </section>
+
+    <article class="endpoint glass reveal">
+      <div class="code-block">INVALID_MAILBOX      <span class="n">400</span>   Mailbox name failed validation
+INVALID_ID           <span class="n">400</span>   Message ID failed validation
+MESSAGE_NOT_FOUND    <span class="n">404</span>   Message doesn't exist or expired
+RATE_LIMITED         <span class="n">429</span>   You've hit 30 req/min
+IP_BLACKLISTED       <span class="n">429</span>   Your IP is temporarily blocked
+METHOD_NOT_ALLOWED   <span class="n">405</span>   Wrong HTTP verb for this endpoint
+UPSTREAM_BUSY        <span class="n">503</span>   Server queued too many requests at once
+UPSTREAM_ERROR       <span class="n">502</span>   Maildrop itself failed</div>
+    </article>
+
+    <section class="dev-cta glass reveal">
+      <div>
+        <span class="eyebrow">READY TO BUILD?</span>
+        <h2>Grab a mailbox. Hit the API.</h2>
+        <p>Open any mailbox name on the main site, then use it with the API. All inboxes are public.</p>
+      </div>
+      <div class="actions">
+        <a class="button button-ghost" href="/owner.html">Meet the dev</a>
+        <a class="button button-primary" href="/login.html">Open a mailbox →</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer section-shell">
+    <div><a class="brand" href="/"><span class="brand-mark">Z</span><span><strong>ZMAIL</strong><small>DROP</small></span></a><p>Simple temporary mail access.</p></div>
+    <div class="footer-system"><span>AFRICA/LAGOS</span><strong data-lagos-clock>--:--:--</strong><small>© <span data-year-range>2025</span> ZMAIL Drop · A Zikky Tech project</small></div>
+  </footer>
+
+  <script src="/js/clock.js" defer></script>
+  <script src="/js/hamburger.js" defer></script>
+  <script src="/js/ui.js" defer></script>
+  <script>
+    document.querySelectorAll("[data-copy]").forEach((block) => {
+      const btn = document.createElement("button");
+      btn.className = "copy";
+      btn.textContent = "COPY";
+      block.appendChild(btn);
+      btn.addEventListener("click", async () => {
+        const clone = block.cloneNode(true);
+        clone.querySelector(".copy")?.remove();
+        try {
+          await navigator.clipboard.writeText(clone.textContent.trim());
+          btn.textContent = "COPIED";
+        } catch { btn.textContent = "FAILED"; }
+        setTimeout(() => (btn.textContent = "COPY"), 1400);
+      });
+    });
+  </script>
+</body>
+</html>
+
+
