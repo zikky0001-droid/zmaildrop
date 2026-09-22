@@ -1,3 +1,5 @@
+// api/maildrop.js 
+
 const MAILDROP_URL = "https://api.maildrop.cc/graphql";
 
 function send(res, status, body) {
@@ -192,6 +194,7 @@ module.exports = async function handler(req, res) {
             subject
             date
             html
+            data
           }
         }
       `;
@@ -306,3 +309,5 @@ module.exports = async function handler(req, res) {
     });
   }
 };
+
+
