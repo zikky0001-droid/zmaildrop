@@ -161,6 +161,12 @@ Note: Without Vercel, the API endpoints won't run — you'd need to host them el
 ```
 ---
 
+
+<p align="center">
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Rubik+Dirt&size=65&pause=1000&color=00FF00&background=FF20A500&center=true&vCenter=true&width=1000&height=150&lines=ZMAIL+DROP;DEV+ZIKKY+MD;THANKS+FOR+USING;OUR+MAIL+SERVICES" alt="Typing SVG" /></a>
+</p>
+
+
 ⚙️ Configuration
 
 `ZMAIL Drop needs Firebase (for rate limiting + stats) and a cron secret (for the daily cleanup). This section walks you through getting each one.`
@@ -766,5 +772,13 @@ ZMAIL Drop — Simple temporary mail access.
 Built with ☕ and 🌙 by Dev Zikky from Lagos, Nigeria 🇳🇬
 
 </div>
+
+
+
+<p align="center">
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Rubik+Dirt&size=65&pause=1000&color=00FF00&background=FF20A500&center=true&vCenter=true&width=1000&height=150&lines=ZMAIL+DROP;DEV+ZIKKY+MD;THANKS+FOR+USING;OUR+MAIL+SERVICES" alt="Typing SVG" /></a>
+</p>
+
+
 
 
