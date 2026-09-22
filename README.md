@@ -782,3 +782,6 @@ Built with ☕ and 🌙 by Dev Zikky from Lagos, Nigeria 🇳🇬
 
 
 
+<img src="https://fontmeme.com/permalink/220116/0c42dc0b64931810388ba399da55e927.png" alt="THANK YOU FOR VISITING, DON'T FORGET TO GIVE ME A STAR" border="0"></a>  
+
+
