@@ -88,8 +88,8 @@
     </section>
 
     <div class="code-block reveal" data-copy>
-<span class="c"># List all messages in mailbox "2"</span>
-curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=2"</span>
+<span class="c"># List all messages in mailbox "any-name"</span>
+curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-name"</span>
     </div>
 
     <section id="endpoints" class="section-heading reveal" style="margin-top:80px">
@@ -112,19 +112,19 @@ curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=2"</s
     <article class="endpoint glass reveal">
       <div class="endpoint-head"><span class="verb get">GET</span><code>/api/v1/inbox?mailbox=:name</code></div>
       <p>Lists all messages in a mailbox. Results are cached for 3 seconds to protect the upstream.</p>
-      <div class="code-block" data-copy>curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=2"</span></div>
+      <div class="code-block" data-copy>curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-name"</span></div>
     </article>
 
     <article class="endpoint glass reveal">
       <div class="endpoint-head"><span class="verb get">GET</span><code>/api/v1/message?mailbox=:name&amp;id=:id</code></div>
       <p>Reads a single message by ID, including the raw MIME <code>data</code> field for attachment parsing.</p>
-      <div class="code-block" data-copy>curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/message?mailbox=2&amp;id=rvRN00Odx3"</span></div>
+      <div class="code-block" data-copy>curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/message?mailbox=any-name&amp;id=rvRN00Odx3"</span></div>
     </article>
 
     <article class="endpoint glass reveal">
       <div class="endpoint-head"><span class="verb delete">DELETE</span><code>/api/v1/message?mailbox=:name&amp;id=:id</code></div>
       <p>Permanently removes a message from the mailbox.</p>
-      <div class="code-block" data-copy>curl -s -X DELETE <span class="s">"https://zmaildrop.vercel.app/api/v1/message?mailbox=2&amp;id=rvRN00Odx3"</span></div>
+      <div class="code-block" data-copy>curl -s -X DELETE <span class="s">"https://zmaildrop.vercel.app/api/v1/message?mailbox=any-name&amp;id=rvRN00Odx3"</span></div>
     </article>
 
     <section class="section-heading reveal" style="margin-top:80px">
@@ -132,7 +132,7 @@ curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=2"</s
       <h2>JavaScript &amp; Python.</h2>
     </section>
 
-    <div class="code-block reveal" data-copy><span class="k">const</span> res = <span class="k">await</span> <span class="p">fetch</span>(<span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=2"</span>);
+    <div class="code-block reveal" data-copy><span class="k">const</span> res = <span class="k">await</span> <span class="p">fetch</span>(<span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-name"</span>);
 <span class="k">const</span> json = <span class="k">await</span> res.<span class="p">json</span>();
 <span class="k">if</span> (json.ok) {
   <span class="k">for</span> (<span class="k">const</span> msg <span class="k">of</span> json.data.messages) {
@@ -141,7 +141,7 @@ curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=2"</s
 }</div>
 
     <div class="code-block reveal" data-copy style="margin-top:14px"><span class="k">import</span> requests
-r = requests.<span class="p">get</span>(<span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=2"</span>)
+r = requests.<span class="p">get</span>(<span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-name"</span>)
 data = r.<span class="p">json</span>()
 <span class="k">if</span> data[<span class="s">"ok"</span>]:
     <span class="k">for</span> msg <span class="k">in</span> data[<span class="s">"data"</span>][<span class="s">"messages"</span>]:
@@ -197,7 +197,7 @@ UPSTREAM_ERROR       <span class="n">502</span>   Maildrop itself failed</div>
 
   <footer class="footer section-shell">
     <div><a class="brand" href="/"><span class="brand-mark">Z</span><span><strong>ZMAIL</strong><small>DROP</small></span></a><p>Simple temporary mail access.</p></div>
-    <div class="footer-system"><span>AFRICA/LAGOS</span><strong data-lagos-clock>--:--:--</strong><small>© <span data-year-range>2025</span> ZMAIL Drop · A Zikky Tech project</small></div>
+    <div class="footer-system"><span>AFRICA/LAGOS</span><strong data-lagos-clock>--:--:--</strong><small>© <span data-year-range>2025</span> ZMAIL Drop · A ♦ DEV ZIKKY TECH ♦ Project</small></div>
   </footer>
 
   <script src="/js/clock.js" defer></script>
