@@ -5,7 +5,6 @@
   "functions": {
     "api/maildrop.js": { "maxDuration": 10 },
     "api/v1/health.js": { "maxDuration": 10 },
-    "api/v1/domains.js": { "maxDuration": 10 },
     "api/v1/inbox.js": { "maxDuration": 10 },
     "api/v1/message.js": { "maxDuration": 10 },
     "api/v1/cleanup.js": { "maxDuration": 30 }
