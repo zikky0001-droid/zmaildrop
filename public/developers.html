@@ -3,41 +3,235 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="ZMAIL Drop API — free temporary email inboxes for your apps, bots, and scripts.">
+  <meta name="description" content="ZMAIL Drop API — free temporary email inboxes for your apps, bots, and scripts. No auth, no signup, no cost.">
   <meta name="theme-color" content="#07090d">
-  <title>ZMAIL Drop — Public API</title>
+  <title>ZMAIL Drop — Public API Documentation</title>
   <link rel="stylesheet" href="/style.css">
   <style>
-    .dev-hero { padding: 80px 0 30px; text-align: center; }
+    /* ============ DEVELOPERS PAGE — extended docs ============ */
+    body[data-page="developers"] { scroll-behavior: smooth; }
+
+    /* --- Hero --- */
+    .dev-hero { padding: 80px 0 40px; text-align: center; position: relative; }
     .dev-hero h1 { font: 700 clamp(38px, 6vw, 68px)/1.05 "Space Grotesk"; letter-spacing: -.05em; margin: 14px 0; }
     .dev-hero h1 span { background: linear-gradient(90deg, #fff, var(--cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .dev-hero p { color: var(--muted); font-size: 15px; max-width: 620px; margin: 0 auto; }
-    .endpoint { border-radius: 22px; padding: 28px; margin-bottom: 14px; }
-    .endpoint-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 12px; }
-    .verb { padding: 5px 11px; border-radius: 8px; font: 800 10px "Space Grotesk"; letter-spacing: .12em; }
-    .verb.get { background: rgba(76,221,160,.12); color: #a9e8cb; border: 1px solid rgba(76,221,160,.3); }
+    .dev-hero p { color: var(--muted); font-size: 15px; max-width: 640px; margin: 0 auto; line-height: 1.7; }
+    .dev-hero .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 28px; }
+
+    /* --- Quick stats strip --- */
+    .dev-stats {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+      margin: 40px 0 0;
+    }
+    .dev-stat { padding: 20px 16px; border-radius: 18px; text-align: center; }
+    .dev-stat strong { display: block; font: 700 clamp(20px, 2.6vw, 30px)/1 "Space Grotesk"; color: var(--cyan); letter-spacing: -.02em; }
+    .dev-stat span { display: block; color: var(--muted); font: 700 10px "Space Grotesk"; letter-spacing: .16em; margin-top: 8px; text-transform: uppercase; }
+    @media (max-width: 700px) { .dev-stats { grid-template-columns: 1fr 1fr; } }
+
+    /* --- TOC --- */
+    .dev-layout { display: grid; grid-template-columns: 220px 1fr; gap: 40px; align-items: start; margin-top: 60px; }
+    .dev-toc {
+      position: sticky; top: 100px;
+      padding: 22px 20px; border-radius: 20px;
+      font-size: 12px;
+    }
+    .dev-toc h4 { margin: 0 0 14px; color: var(--cyan); font: 700 10px "Space Grotesk"; letter-spacing: .18em; text-transform: uppercase; }
+    .dev-toc ol { margin: 0; padding: 0; list-style: none; counter-reset: toc; }
+    .dev-toc li { counter-increment: toc; margin-bottom: 8px; }
+    .dev-toc a {
+      color: var(--muted); display: flex; gap: 8px; align-items: baseline;
+      padding: 4px 0; transition: color .2s;
+    }
+    .dev-toc a::before { content: counter(toc, decimal-leading-zero); color: var(--cyan); font: 700 9px "Space Grotesk"; letter-spacing: .08em; }
+    .dev-toc a:hover { color: var(--text); }
+    @media (max-width: 900px) {
+      .dev-layout { grid-template-columns: 1fr; gap: 20px; }
+      .dev-toc { position: static; display: flex; flex-wrap: wrap; gap: 8px; }
+      .dev-toc h4 { width: 100%; }
+      .dev-toc ol { display: flex; flex-wrap: wrap; gap: 6px; }
+      .dev-toc li { margin: 0; }
+      .dev-toc a { padding: 6px 10px; border: 1px solid var(--line); border-radius: 99px; background: rgba(255,255,255,.02); }
+      .dev-toc a::before { display: none; }
+    }
+
+    /* --- Section headings inside docs --- */
+    .docs-section { margin-top: 60px; scroll-margin-top: 100px; }
+    .docs-section h2 {
+      font: 700 clamp(24px, 3vw, 34px)/1.1 "Space Grotesk";
+      letter-spacing: -.03em; margin: 0 0 8px;
+    }
+    .docs-section > p { color: var(--muted); font-size: 14px; margin: 0 0 22px; max-width: 720px; }
+
+    /* --- Endpoint card --- */
+    .endpoint {
+      border-radius: 22px; padding: 26px;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .endpoint::before {
+      content: ""; position: absolute; left: 0; top: 24px; bottom: 24px;
+      width: 3px; border-radius: 3px; opacity: .7;
+      background: var(--cyan);
+    }
+    .endpoint.is-delete::before { background: var(--danger); }
+    .endpoint-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; }
+    .endpoint-head code { font: 700 14px "Space Grotesk", monospace; color: var(--cyan); letter-spacing: -.01em; overflow-wrap: anywhere; }
+    .endpoint-desc { color: var(--muted); font-size: 13px; margin: 0 0 18px; line-height: 1.65; max-width: 640px; }
+    .endpoint-body { display: grid; gap: 10px; }
+
+    .verb {
+      padding: 5px 11px; border-radius: 8px;
+      font: 800 10px "Space Grotesk"; letter-spacing: .14em;
+    }
+    .verb.get    { background: rgba(76,221,160,.12); color: #a9e8cb; border: 1px solid rgba(76,221,160,.3); }
     .verb.delete { background: rgba(255,99,120,.1); color: #ff8b9c; border: 1px solid rgba(255,99,120,.3); }
-    .endpoint-head code { font: 700 14px "Space Grotesk", monospace; color: var(--cyan); }
-    .endpoint p { color: var(--muted); font-size: 13px; margin: 0 0 14px; }
+    .verb.post   { background: rgba(139,124,255,.12); color: #cfc8ff; border: 1px solid rgba(139,124,255,.3); }
+
+    /* --- Status chips --- */
+    .status-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 9px; border-radius: 99px;
+      font: 700 10px "Space Grotesk"; letter-spacing: .06em;
+      background: rgba(255,255,255,.03); border: 1px solid var(--line);
+    }
+    .status-pill.ok { color: #a9e8cb; border-color: rgba(76,221,160,.35); background: rgba(76,221,160,.08); }
+    .status-pill.warn { color: #ffc55a; border-color: rgba(255,197,90,.3); background: rgba(255,197,90,.06); }
+    .status-pill.err { color: #ff8b9c; border-color: rgba(255,99,120,.3); background: rgba(255,99,120,.06); }
+
+    /* --- Code blocks --- */
     .code-block {
       background: #070b11; border: 1px solid var(--line2); border-radius: 14px;
-      padding: 16px 18px; overflow-x: auto; position: relative;
+      padding: 14px 18px; overflow-x: auto; position: relative;
       font: 12px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace;
       color: #cfd6e0; white-space: pre;
     }
+    .code-block + .code-block { margin-top: 8px; }
     .code-block .copy {
-      position: absolute; top: 10px; right: 10px;
+      position: absolute; top: 8px; right: 8px;
       background: rgba(255,255,255,.05); border: 1px solid var(--line2);
       color: var(--muted); font: 700 9px "Space Grotesk"; letter-spacing: .14em;
-      padding: 5px 9px; border-radius: 8px; cursor: pointer;
+      padding: 4px 8px; border-radius: 6px; cursor: pointer;
+      transition: .15s;
     }
-    .code-block .copy:hover { color: var(--text); border-color: rgba(255,255,255,.25); }
+    .code-block .copy:hover { color: var(--text); border-color: rgba(255,255,255,.25); background: rgba(255,255,255,.08); }
     .code-block .k { color: #c792ea; } .code-block .s { color: #a9e8cb; }
     .code-block .c { color: #6b7480; font-style: italic; } .code-block .n { color: #ffc55a; }
-    .code-block .p { color: #8bd5ff; }
+    .code-block .p { color: #8bd5ff; } .code-block .b { color: #7dd3fc; font-weight: 700; }
+    .code-block .o { color: #94a3b8; }
+
+    /* --- Collapsible response --- */
+    .response-wrap { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: rgba(255,255,255,.015); }
+    .response-wrap > summary {
+      list-style: none; cursor: pointer;
+      padding: 12px 16px;
+      display: flex; align-items: center; gap: 10px;
+      font: 700 11px "Space Grotesk"; letter-spacing: .08em; color: var(--text);
+      background: rgba(255,255,255,.02);
+      border-bottom: 1px solid transparent;
+      transition: .15s;
+    }
+    .response-wrap[open] > summary { border-bottom-color: var(--line); background: rgba(255,255,255,.03); }
+    .response-wrap > summary::-webkit-details-marker { display: none; }
+    .response-wrap > summary::before {
+      content: "▸"; color: var(--cyan); font-size: 12px;
+      transition: transform .15s;
+    }
+    .response-wrap[open] > summary::before { transform: rotate(90deg); }
+    .response-wrap > summary small { color: var(--muted); font: 700 10px "Space Grotesk"; letter-spacing: .1em; margin-left: auto; }
+    .response-wrap .code-block { border: 0; border-radius: 0; margin: 0; }
+
+    /* --- Tabs --- */
+    .tabs { margin-top: 10px; }
+    .tabs-nav {
+      display: flex; gap: 4px; flex-wrap: wrap;
+      padding: 4px; border-radius: 12px;
+      background: rgba(255,255,255,.03); border: 1px solid var(--line);
+      width: max-content;
+    }
+    .tabs-nav button {
+      border: 0; background: transparent; color: var(--muted);
+      font: 700 11px "Space Grotesk"; letter-spacing: .06em;
+      padding: 7px 13px; border-radius: 9px; cursor: pointer;
+      transition: .15s;
+    }
+    .tabs-nav button:hover { color: var(--text); }
+    .tabs-nav button.active { background: linear-gradient(135deg, rgba(139,124,255,.25), rgba(85,230,255,.2)); color: var(--text); }
+    .tabs-panel { display: none; margin-top: 10px; }
+    .tabs-panel.active { display: block; }
+
+    /* --- Data model grid --- */
+    .model-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+      margin-top: 14px;
+    }
+    .model-card {
+      padding: 18px 20px; border-radius: 16px;
+      border: 1px solid var(--line); background: rgba(255,255,255,.015);
+    }
+    .model-card h4 { font: 700 14px "Space Grotesk"; margin: 0 0 4px; }
+    .model-card p { color: var(--muted); font-size: 12px; margin: 0 0 12px; }
+    .model-fields { display: grid; gap: 8px; font: 12px ui-monospace, monospace; }
+    .model-fields div { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+    .model-fields span:first-child { color: var(--cyan); }
+    .model-fields span:last-child { color: var(--muted); font-size: 11px; }
+    @media (max-width: 700px) { .model-grid { grid-template-columns: 1fr; } }
+
+    /* --- Note / callout --- */
+    .note {
+      padding: 14px 18px; border-radius: 14px;
+      border-left: 3px solid var(--cyan);
+      background: rgba(85,230,255,.05);
+      color: var(--text); font-size: 13px; line-height: 1.65;
+      margin-top: 12px;
+    }
+    .note b { color: var(--cyan); }
+
+    /* --- Errors table --- */
+    .error-table {
+      width: 100%; border-collapse: separate; border-spacing: 0 6px;
+      font-size: 12px;
+    }
+    .error-table th {
+      text-align: left; color: var(--muted);
+      font: 700 10px "Space Grotesk"; letter-spacing: .14em;
+      text-transform: uppercase;
+      padding: 8px 12px;
+    }
+    .error-table td {
+      padding: 12px; vertical-align: top;
+      background: rgba(255,255,255,.02);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .error-table tr td:first-child { border-left: 1px solid var(--line); border-radius: 12px 0 0 12px; }
+    .error-table tr td:last-child { border-right: 1px solid var(--line); border-radius: 0 12px 12px 0; }
+    .error-table code { color: var(--cyan); font: 700 11px "Space Grotesk", monospace; }
+    .error-table .status-mini {
+      display: inline-block; padding: 2px 8px; border-radius: 6px;
+      font: 800 10px "Space Grotesk"; letter-spacing: .06em;
+    }
+    .s-400 { background: rgba(255,197,90,.1); color: #ffc55a; }
+    .s-404 { background: rgba(255,99,120,.1); color: #ff8b9c; }
+    .s-405 { background: rgba(139,124,255,.12); color: #cfc8ff; }
+    .s-429 { background: rgba(255,99,120,.15); color: #ff8b9c; }
+    .s-500 { background: rgba(255,99,120,.2); color: #ff8b9c; }
+    .s-502 { background: rgba(255,99,120,.15); color: #ff8b9c; }
+    .s-503 { background: rgba(255,197,90,.15); color: #ffc55a; }
+
+    @media (max-width: 700px) {
+      .error-table, .error-table thead, .error-table tbody, .error-table tr, .error-table td { display: block; width: 100%; }
+      .error-table thead { display: none; }
+      .error-table tr { margin-bottom: 10px; }
+      .error-table td { border: 1px solid var(--line) !important; border-radius: 12px !important; border-top: 0; }
+      .error-table td:first-child { border-top: 1px solid var(--line) !important; }
+    }
+
+    /* --- CTA --- */
     .dev-cta {
       display: flex; justify-content: space-between; align-items: center; gap: 30px;
-      padding: 32px 34px; border-radius: 26px; margin: 60px auto 90px;
+      padding: 32px 34px; border-radius: 26px; margin: 80px auto 90px;
     }
     .dev-cta h2 { font: 700 24px "Space Grotesk"; margin: 0 0 4px; }
     .dev-cta p { color: var(--muted); font-size: 13px; margin: 0; max-width: 520px; }
@@ -54,7 +248,10 @@
   <div class="site-progress"></div>
 
   <header class="topbar">
-    <a class="brand" href="/" aria-label="ZMAIL Drop home"><span class="brand-mark">Z</span><span><strong>ZMAIL</strong><small>DROP</small></span></a>
+    <a class="brand" href="/" aria-label="ZMAIL Drop home">
+      <span class="brand-mark">Z</span>
+      <span><strong>ZMAIL</strong><small>DROP</small></span>
+    </a>
     <nav class="desktop-nav" aria-label="Primary navigation">
       <a href="/">Home</a>
       <a href="/login.html">New mailbox</a>
@@ -67,137 +264,601 @@
 
   <aside class="mobile-menu" data-mobile-menu aria-hidden="true">
     <div class="menu-head"><span>MENU</span><button type="button" class="icon-button" data-menu-close aria-label="Close menu">×</button></div>
-    <nav><a href="/">Home</a><a href="/login.html">New mailbox</a><a href="/#features">Features</a><a href="/owner.html">Developer <span>↗</span></a></nav>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/login.html">New mailbox</a>
+      <a href="/#features">Features</a>
+      <a href="/owner.html">Developer <span>↗</span></a>
+    </nav>
   </aside>
   <div class="menu-backdrop" data-menu-close></div>
 
   <main class="section-shell">
+    <!-- HERO -->
     <section class="dev-hero reveal">
       <span class="badge">REST · JSON · FREE · NO AUTH</span>
       <h1>ZMAIL Drop <span>Public API</span></h1>
-      <p>Query temporary inboxes, read messages, and delete them — from your apps, bots, or scripts. No signup, no API key, no cost. Rate limit: 30 requests/minute per IP.</p>
-      <div class="hero-actions" style="justify-content:center">
+      <p>
+        Query temporary inboxes, read messages, and delete them from your apps, bots, or scripts.
+        No signup, no API key, no cost. Rate limited to <strong style="color:var(--text)">30 requests / minute per IP</strong> with a 5-minute blacklist on excess.
+      </p>
+      <div class="hero-actions">
         <a class="button button-primary" href="#endpoints">Browse endpoints ↓</a>
         <a class="button button-ghost" href="#quickstart">Quick start</a>
       </div>
+
+      <div class="dev-stats">
+        <div class="dev-stat glass"><strong>4</strong><span>Endpoints</span></div>
+        <div class="dev-stat glass"><strong>30/min</strong><span>Rate limit</span></div>
+        <div class="dev-stat glass"><strong>3s</strong><span>Cache TTL</span></div>
+        <div class="dev-stat glass"><strong>$0</strong><span>Forever</span></div>
+      </div>
     </section>
 
-    <section id="quickstart" class="section-heading reveal" style="margin-top:60px">
-      <span class="eyebrow">QUICK START</span>
-      <h2>One curl. That's it.</h2>
-    </section>
+    <!-- LAYOUT: TOC + CONTENT -->
+    <div class="dev-layout">
+      <!-- TOC -->
+      <aside class="dev-toc glass reveal">
+        <h4>On this page</h4>
+        <ol>
+          <li><a href="#quickstart">Quick start</a></li>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#envelope">Response envelope</a></li>
+          <li><a href="#endpoints">Endpoints</a></li>
+          <li><a href="#models">Data models</a></li>
+          <li><a href="#examples">Client examples</a></li>
+          <li><a href="#limits">Rate limits</a></li>
+          <li><a href="#errors">Error codes</a></li>
+          <li><a href="#http">HTTP status codes</a></li>
+        </ol>
+      </aside>
 
-    <div class="code-block reveal" data-copy>
-<span class="c"># List all messages in mailbox "any-name"</span>
-curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-name"</span>
-    </div>
+      <div>
+        <!-- QUICK START -->
+        <section id="quickstart" class="docs-section reveal">
+          <span class="eyebrow">01 / QUICK START</span>
+          <h2>One curl. That's it.</h2>
+          <p>Hit any endpoint directly from your terminal. No setup, no key.</p>
 
-    <section id="endpoints" class="section-heading reveal" style="margin-top:80px">
-      <span class="eyebrow">ENDPOINTS</span>
-      <h2>Everything the API does.</h2>
-    </section>
+          <div class="code-block" data-copy>
+<span class="c"># List every message in mailbox "any-name"</span>
+curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-name"</span> | jq
+          </div>
 
-    <article class="endpoint glass reveal">
-      <div class="endpoint-head"><span class="verb get">GET</span><code>/api/v1/health</code></div>
-      <p>Status check. Confirms the service is online and whether Firebase is connected.</p>
-      <div class="code-block" data-copy>curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/health"</span></div>
-    </article>
+          <div class="note">
+            <b>Tip:</b> pipe through <code>| jq</code> for pretty output. Every response is valid JSON.
+          </div>
+        </section>
 
-    <article class="endpoint glass reveal">
-      <div class="endpoint-head"><span class="verb get">GET</span><code>/api/v1/inbox?mailbox=:name</code></div>
-      <p>Lists all messages in a mailbox. Results are cached for 3 seconds to protect the upstream.</p>
-      <div class="code-block" data-copy>curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-name"</span></div>
-    </article>
+        <!-- OVERVIEW -->
+        <section id="overview" class="docs-section reveal">
+          <span class="eyebrow">02 / OVERVIEW</span>
+          <h2>How the API works.</h2>
+          <p>
+            ZMAIL Drop is a thin, cached proxy over Maildrop's public inboxes.
+            Every request is rate limited, throttled, and cached to protect the upstream —
+            but from your side, it's just clean JSON over HTTPS.
+          </p>
 
-    <article class="endpoint glass reveal">
-      <div class="endpoint-head"><span class="verb get">GET</span><code>/api/v1/message?mailbox=:name&amp;id=:id</code></div>
-      <p>Reads a single message by ID, including the raw Media/MIME <code>data</code> field for attachment parsing.</p>
-      <div class="code-block" data-copy>curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/message?mailbox=any-name&amp;id=rvRN00Odx3"</span></div>
-    </article>
+          <div class="endpoint glass">
+            <div class="endpoint-body">
+              <div class="code-block">
+<span class="c">Base URL:</span>  <span class="s">https://zmaildrop.vercel.app/api/v1</span>
+<span class="c">Auth:</span>      <span class="o">none</span>
+<span class="c">Format:</span>    <span class="o">JSON (application/json)</span>
+<span class="c">Methods:</span>   <span class="o">GET, DELETE, OPTIONS</span>
+<span class="c">CORS:</span>      <span class="o">allowed from any origin</span>
+              </div>
+            </div>
+          </div>
+        </section>
 
-    <article class="endpoint glass reveal">
-      <div class="endpoint-head"><span class="verb delete">DELETE</span><code>/api/v1/message?mailbox=:name&amp;id=:id</code></div>
-      <p>Permanently removes a message from the mailbox.</p>
-      <div class="code-block" data-copy>curl -s -X DELETE <span class="s">"https://zmaildrop.vercel.app/api/v1/message?mailbox=any-name&amp;id=rvRN00Odx3"</span></div>
-    </article>
+        <!-- RESPONSE ENVELOPE -->
+        <section id="envelope" class="docs-section reveal">
+          <span class="eyebrow">03 / ENVELOPE</span>
+          <h2>Every response shares the same shape.</h2>
+          <p>
+            All responses are JSON objects with a top-level <code>ok</code> boolean.
+            Success responses include <code>data</code> and <code>meta</code>.
+            Errors include <code>error</code> and <code>meta</code>.
+          </p>
 
-    <section class="section-heading reveal" style="margin-top:80px">
-      <span class="eyebrow">CLIENT EXAMPLES</span>
-      <h2>JavaScript &amp; Python.</h2>
-    </section>
+          <div class="tabs" data-tabs>
+            <div class="tabs-nav">
+              <button type="button" data-tab="success" class="active">Success</button>
+              <button type="button" data-tab="error">Error</button>
+            </div>
 
-    <div class="code-block reveal" data-copy><span class="k">const</span> res = <span class="k">await</span> <span class="p">fetch</span>(<span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-name"</span>);
-<span class="k">const</span> json = <span class="k">await</span> res.<span class="p">json</span>();
-<span class="k">if</span> (json.ok) {
-  <span class="k">for</span> (<span class="k">const</span> msg <span class="k">of</span> json.data.messages) {
-    console.<span class="p">log</span>(msg.subject, msg.headerfrom);
+            <div class="tabs-panel active" data-panel="success">
+              <div class="code-block" data-copy>{
+  <span class="s">"ok"</span>: <span class="b">true</span>,
+  <span class="s">"data"</span>: { <span class="c">/* the actual payload */</span> },
+  <span class="s">"meta"</span>: {
+    <span class="s">"request_id"</span>: <span class="s">"req_b41o301d"</span>,
+    <span class="s">"timestamp"</span>: <span class="s">"2026-09-22T16:25:10.193Z"</span>,
+    <span class="s">"rate"</span>: { <span class="s">"limit"</span>: <span class="n">30</span>, <span class="s">"remaining"</span>: <span class="n">29</span>, <span class="s">"reset_in_seconds"</span>: <span class="n">59</span> }
   }
 }</div>
+            </div>
 
-    <div class="code-block reveal" data-copy style="margin-top:14px"><span class="k">import</span> requests
-r = requests.<span class="p">get</span>(<span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-name"</span>)
+            <div class="tabs-panel" data-panel="error">
+              <div class="code-block" data-copy>{
+  <span class="s">"ok"</span>: <span class="b">false</span>,
+  <span class="s">"error"</span>: {
+    <span class="s">"code"</span>: <span class="s">"RATE_LIMITED"</span>,
+    <span class="s">"message"</span>: <span class="s">"Rate limit exceeded."</span>,
+    <span class="s">"hint"</span>: <span class="s">"You've hit 30 requests in 60 seconds. Wait a moment."</span>,
+    <span class="s">"retry_after_seconds"</span>: <span class="n">43</span>,
+    <span class="s">"docs"</span>: <span class="s">"https://zmaildrop.vercel.app/developers.html#errors"</span>
+  },
+  <span class="s">"meta"</span>: {
+    <span class="s">"request_id"</span>: <span class="s">"req_xyz12345"</span>,
+    <span class="s">"timestamp"</span>: <span class="s">"2026-09-22T16:25:10.193Z"</span>
+  }
+}</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ENDPOINTS -->
+        <section id="endpoints" class="docs-section reveal">
+          <span class="eyebrow">04 / ENDPOINTS</span>
+          <h2>Everything the API does.</h2>
+
+          <!-- HEALTH -->
+          <article class="endpoint glass">
+            <div class="endpoint-head">
+              <span class="verb get">GET</span>
+              <code>/api/v1/health</code>
+            </div>
+            <p class="endpoint-desc">
+              Status check. Confirms the service is online, whether Firebase is connected,
+              returns current Lagos time, lifetime request count, and links to every available endpoint.
+            </p>
+            <div class="endpoint-body">
+              <div class="code-block" data-copy>curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/health"</span> | jq</div>
+
+              <details class="response-wrap">
+                <summary>Response <small>200 OK</small></summary>
+                <div class="code-block">{
+  <span class="s">"ok"</span>: <span class="b">true</span>,
+  <span class="s">"data"</span>: {
+    <span class="s">"service"</span>: <span class="s">"ZMAIL Drop API"</span>,
+    <span class="s">"version"</span>: <span class="s">"v1"</span>,
+    <span class="s">"status"</span>: <span class="s">"online"</span>,
+    <span class="s">"firebase"</span>: <span class="s">"connected"</span>,
+    <span class="s">"timezone"</span>: {
+      <span class="s">"name"</span>: <span class="s">"Africa/Lagos"</span>,
+      <span class="s">"offset"</span>: <span class="s">"UTC+1"</span>,
+      <span class="s">"now"</span>: <span class="s">"Tuesday, 22 September 2026 at 17:25:09 WAT"</span>
+    },
+    <span class="s">"time"</span>: {
+      <span class="s">"iso_utc"</span>: <span class="s">"2026-09-22T16:25:09.948Z"</span>,
+      <span class="s">"unix_ms"</span>: <span class="n">1790094309948</span>
+    },
+    <span class="s">"stats"</span>: {
+      <span class="s">"total_requests"</span>: <span class="n">40</span>,
+      <span class="s">"last_hit_at"</span>: <span class="s">"2026-09-22T16:25:08.743Z"</span>
+    },
+    <span class="s">"endpoints"</span>: {
+      <span class="s">"inbox"</span>: <span class="s">"/api/v1/inbox?mailbox=:name"</span>,
+      <span class="s">"message"</span>: <span class="s">"/api/v1/message?mailbox=:name&id=:id"</span>,
+      <span class="s">"docs"</span>: <span class="s">"https://zmaildrop.vercel.app/developers.html"</span>
+    }
+  },
+  <span class="s">"meta"</span>: {
+    <span class="s">"request_id"</span>: <span class="s">"req_b41o301d"</span>,
+    <span class="s">"timestamp"</span>: <span class="s">"2026-09-22T16:25:10.193Z"</span>,
+    <span class="s">"docs"</span>: <span class="s">"https://zmaildrop.vercel.app/developers.html"</span>
+  }
+}</div>
+              </details>
+
+              <div class="status-row">
+                <span class="status-pill ok">200 Success</span>
+                <span class="status-pill err">405 Method Not Allowed</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- INBOX -->
+          <article class="endpoint glass">
+            <div class="endpoint-head">
+              <span class="verb get">GET</span>
+              <code>/api/v1/inbox?mailbox=:name</code>
+            </div>
+            <p class="endpoint-desc">
+              Lists all messages in a mailbox. Results are cached for 3 seconds to protect the upstream.
+              Second calls within the window return instantly from cache.
+            </p>
+            <div class="endpoint-body">
+              <div class="code-block" data-copy>curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-name"</span> | jq</div>
+
+              <details class="response-wrap">
+                <summary>Response <small>200 OK · cache MISS</small></summary>
+                <div class="code-block">{
+  <span class="s">"ok"</span>: <span class="b">true</span>,
+  <span class="s">"data"</span>: {
+    <span class="s">"mailbox"</span>: <span class="s">"1"</span>,
+    <span class="s">"address"</span>: <span class="s">"1@maildrop.cc"</span>,
+    <span class="s">"count"</span>: <span class="n">7</span>,
+    <span class="s">"messages"</span>: [
+      {
+        <span class="s">"id"</span>: <span class="s">"pH6k1fyokk"</span>,
+        <span class="s">"headerfrom"</span>: <span class="s">"Tactical &lt;support@tacticalusa.com&gt;"</span>,
+        <span class="s">"subject"</span>: <span class="s">"You free box of Magtech .45 ACP"</span>,
+        <span class="s">"date"</span>: <span class="s">"2026-09-22T13:50:33.657Z"</span>
+      },
+      {
+        <span class="s">"id"</span>: <span class="s">"aWTBrqSY8v"</span>,
+        <span class="s">"headerfrom"</span>: <span class="s">"\"Pixlr\" &lt;no-reply@pixlr.com&gt;"</span>,
+        <span class="s">"subject"</span>: <span class="s">"What if your photos looked like this? 🎨✨"</span>,
+        <span class="s">"date"</span>: <span class="s">"2026-09-22T10:02:29.474Z"</span>
+      }
+    ]
+  },
+  <span class="s">"meta"</span>: {
+    <span class="s">"request_id"</span>: <span class="s">"req_opirqilb"</span>,
+    <span class="s">"timestamp"</span>: <span class="s">"2026-09-22T16:25:25.378Z"</span>,
+    <span class="s">"cached"</span>: <span class="b">false</span>,
+    <span class="s">"duration_ms"</span>: <span class="n">1274</span>,
+    <span class="s">"rate"</span>: {
+      <span class="s">"limit"</span>: <span class="n">30</span>,
+      <span class="s">"remaining"</span>: <span class="n">29</span>,
+      <span class="s">"reset_at"</span>: <span class="s">"2026-09-22T16:26:24.104Z"</span>,
+      <span class="s">"reset_in_seconds"</span>: <span class="n">59</span>
+    }
+  }
+}</div>
+              </details>
+
+              <details class="response-wrap">
+                <summary>Response <small>200 OK · cache HIT</small></summary>
+                <div class="code-block">{
+  <span class="s">"ok"</span>: <span class="b">true</span>,
+  <span class="s">"data"</span>: { <span class="c">/* identical payload */</span> },
+  <span class="s">"meta"</span>: {
+    <span class="s">"cached"</span>: <span class="b">true</span>,
+    <span class="s">"duration_ms"</span>: <span class="n">143</span>,
+    <span class="s">"rate"</span>: { <span class="s">"limit"</span>: <span class="n">30</span>, <span class="s">"remaining"</span>: <span class="n">28</span>, <span class="s">"reset_in_seconds"</span>: <span class="n">35</span> }
+  }
+}</div>
+              </details>
+
+              <div class="status-row">
+                <span class="status-pill ok">200 Success</span>
+                <span class="status-pill warn">400 Invalid / Missing mailbox</span>
+                <span class="status-pill err">429 Rate limited</span>
+                <span class="status-pill err">502 Upstream error</span>
+                <span class="status-pill err">503 Upstream busy</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- MESSAGE GET -->
+          <article class="endpoint glass">
+            <div class="endpoint-head">
+              <span class="verb get">GET</span>
+              <code>/api/v1/message?mailbox=:name&amp;id=:id</code>
+            </div>
+            <p class="endpoint-desc">
+              Reads a single message by ID. Returns the sanitized HTML body, the raw MIME source,
+              a pre-built <code>cid_map</code> for inline images, and a <code>has_attachments</code> flag.
+            </p>
+            <div class="endpoint-body">
+              <div class="code-block" data-copy>curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/message?mailbox=any-name&amp;id=pH6k1fyokk"</span> | jq</div>
+
+              <details class="response-wrap">
+                <summary>Response <small>200 OK</small></summary>
+                <div class="code-block">{
+  <span class="s">"ok"</span>: <span class="b">true</span>,
+  <span class="s">"data"</span>: {
+    <span class="s">"mailbox"</span>: <span class="s">"1"</span>,
+    <span class="s">"address"</span>: <span class="s">"1@maildrop.cc"</span>,
+    <span class="s">"message"</span>: {
+      <span class="s">"id"</span>: <span class="s">"pH6k1fyokk"</span>,
+      <span class="s">"from"</span>: <span class="s">"Tactical &lt;support@tacticalusa.com&gt;"</span>,
+      <span class="s">"subject"</span>: <span class="s">"You free box of Magtech .45 ACP"</span>,
+      <span class="s">"date"</span>: <span class="s">"2026-09-22T13:50:33.657Z"</span>,
+      <span class="s">"html"</span>: <span class="s">"  &lt;!DOCTYPE html&gt;..."</span>,
+      <span class="s">"raw"</span>: <span class="s">"Received: from mta2.tacticalusa.com..."</span>,
+      <span class="s">"has_attachments"</span>: <span class="b">false</span>,
+      <span class="s">"cid_map"</span>: {}
+    }
+  },
+  <span class="s">"meta"</span>: {
+    <span class="s">"request_id"</span>: <span class="s">"req_40al6cjj"</span>,
+    <span class="s">"timestamp"</span>: <span class="s">"2026-09-22T16:27:11.936Z"</span>,
+    <span class="s">"cached"</span>: <span class="b">false</span>,
+    <span class="s">"duration_ms"</span>: <span class="n">1409</span>,
+    <span class="s">"rate"</span>: { <span class="s">"limit"</span>: <span class="n">30</span>, <span class="s">"remaining"</span>: <span class="n">29</span>, <span class="s">"reset_in_seconds"</span>: <span class="n">59</span> }
+  }
+}</div>
+              </details>
+
+              <details class="response-wrap">
+                <summary>Response <small>200 OK · with attachment</small></summary>
+                <div class="code-block">{
+  <span class="s">"ok"</span>: <span class="b">true</span>,
+  <span class="s">"data"</span>: {
+    <span class="s">"mailbox"</span>: <span class="s">"2"</span>,
+    <span class="s">"address"</span>: <span class="s">"2@maildrop.cc"</span>,
+    <span class="s">"message"</span>: {
+      <span class="s">"id"</span>: <span class="s">"XDM5OW4eUC"</span>,
+      <span class="s">"from"</span>: <span class="s">"Isaac Achor &lt;achorisaac827@gmail.com&gt;"</span>,
+      <span class="s">"subject"</span>: <span class="s">"With a file"</span>,
+      <span class="s">"date"</span>: <span class="s">"2026-09-22T07:29:22.900Z"</span>,
+      <span class="s">"html"</span>: <span class="s">"&lt;div dir=\"auto\"&gt;Bruuuh&lt;/div&gt;"</span>,
+      <span class="s">"raw"</span>: <span class="s">"Received: by mail-oi2-f12.google.com..."</span>,
+      <span class="s">"has_attachments"</span>: <span class="b">true</span>,
+      <span class="s">"cid_map"</span>: {
+        <span class="s">"ii_1a0c7fdf13420c233d01"</span>: <span class="s">"data:image/jpeg;base64,/9j/4AAQ..."</span>
+      }
+    }
+  },
+  <span class="s">"meta"</span>: { <span class="c">/* ... */</span> }
+}</div>
+              </details>
+
+              <div class="status-row">
+                <span class="status-pill ok">200 Success</span>
+                <span class="status-pill warn">400 Invalid params</span>
+                <span class="status-pill err">404 Message not found</span>
+                <span class="status-pill err">429 Rate limited</span>
+                <span class="status-pill err">502 / 503 Upstream</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- MESSAGE DELETE -->
+          <article class="endpoint glass is-delete">
+            <div class="endpoint-head">
+              <span class="verb delete">DELETE</span>
+              <code>/api/v1/message?mailbox=:name&amp;id=:id</code>
+            </div>
+            <p class="endpoint-desc">
+              Permanently removes a message from the mailbox. Invalidates any cached views of that
+              mailbox and message. Deletion is final — Maildrop has no trash.
+            </p>
+            <div class="endpoint-body">
+              <div class="code-block" data-copy>curl -s -X DELETE <span class="s">"https://zmaildrop.vercel.app/api/v1/message?mailbox=any-name&amp;id=pH6k1fyokk"</span> | jq</div>
+
+              <details class="response-wrap">
+                <summary>Response <small>200 OK</small></summary>
+                <div class="code-block">{
+  <span class="s">"ok"</span>: <span class="b">true</span>,
+  <span class="s">"data"</span>: {
+    <span class="s">"mailbox"</span>: <span class="s">"1"</span>,
+    <span class="s">"id"</span>: <span class="s">"pH6k1fyokk"</span>,
+    <span class="s">"deleted"</span>: <span class="b">true</span>,
+    <span class="s">"result"</span>: <span class="b">true</span>
+  },
+  <span class="s">"meta"</span>: {
+    <span class="s">"request_id"</span>: <span class="s">"req_da7mkyzw"</span>,
+    <span class="s">"timestamp"</span>: <span class="s">"2026-09-22T16:33:55.791Z"</span>,
+    <span class="s">"duration_ms"</span>: <span class="n">707</span>,
+    <span class="s">"rate"</span>: { <span class="s">"limit"</span>: <span class="n">30</span>, <span class="s">"remaining"</span>: <span class="n">29</span>, <span class="s">"reset_in_seconds"</span>: <span class="n">60</span> }
+  }
+}</div>
+              </details>
+
+              <div class="note">
+                <b>Heads up:</b> Maildrop's list index can lag a few seconds behind a delete.
+                A subsequent inbox call may still show the deleted message for a moment — that's upstream behavior, not a bug.
+              </div>
+
+              <div class="status-row">
+                <span class="status-pill ok">200 Success</span>
+                <span class="status-pill warn">400 Invalid params</span>
+                <span class="status-pill err">405 Wrong method</span>
+                <span class="status-pill err">429 Rate limited</span>
+                <span class="status-pill err">502 / 503 Upstream</span>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <!-- DATA MODELS -->
+        <section id="models" class="docs-section reveal">
+          <span class="eyebrow">05 / DATA MODELS</span>
+          <h2>What's inside a message.</h2>
+
+          <div class="model-grid">
+            <div class="model-card glass">
+              <h4>Message (list item)</h4>
+              <p>Lightweight object returned by <code>/inbox</code>.</p>
+              <div class="model-fields">
+                <div><span>id</span><span>string</span></div>
+                <div><span>headerfrom</span><span>string</span></div>
+                <div><span>subject</span><span>string</span></div>
+                <div><span>date</span><span>ISO 8601</span></div>
+              </div>
+            </div>
+
+            <div class="model-card glass">
+              <h4>Message (full)</h4>
+              <p>Detailed object returned by <code>/message</code>.</p>
+              <div class="model-fields">
+                <div><span>id</span><span>string</span></div>
+                <div><span>from</span><span>string</span></div>
+                <div><span>subject</span><span>string</span></div>
+                <div><span>date</span><span>ISO 8601</span></div>
+                <div><span>html</span><span>string | null</span></div>
+                <div><span>raw</span><span>string | null</span></div>
+                <div><span>has_attachments</span><span>boolean</span></div>
+                <div><span>cid_map</span><span>object</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- CLIENT EXAMPLES -->
+        <section id="examples" class="docs-section reveal">
+          <span class="eyebrow">06 / CLIENT EXAMPLES</span>
+          <h2>Copy. Paste. Ship.</h2>
+
+          <div class="tabs" data-tabs>
+            <div class="tabs-nav">
+              <button type="button" data-tab="js" class="active">JavaScript</button>
+              <button type="button" data-tab="py">Python</button>
+              <button type="button" data-tab="curl">cURL</button>
+              <button type="button" data-tab="node">Node.js</button>
+            </div>
+
+            <div class="tabs-panel active" data-panel="js">
+              <div class="code-block" data-copy><span class="c">// Fetch and print every message in a mailbox</span>
+<span class="k">const</span> res = <span class="k">await</span> <span class="p">fetch</span>(<span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=2"</span>);
+<span class="k">const</span> json = <span class="k">await</span> res.<span class="p">json</span>();
+
+<span class="k">if</span> (!json.ok) <span class="k">throw new</span> <span class="p">Error</span>(json.error.message);
+
+<span class="k">for</span> (<span class="k">const</span> msg <span class="k">of</span> json.data.messages) {
+  console.<span class="p">log</span>(<span class="s">`${msg.subject} — ${msg.headerfrom}`</span>);
+}</div>
+            </div>
+
+            <div class="tabs-panel" data-panel="py">
+              <div class="code-block" data-copy><span class="k">import</span> requests
+
+r = requests.<span class="p">get</span>(<span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=2"</span>)
 data = r.<span class="p">json</span>()
+
 <span class="k">if</span> data[<span class="s">"ok"</span>]:
     <span class="k">for</span> msg <span class="k">in</span> data[<span class="s">"data"</span>][<span class="s">"messages"</span>]:
         <span class="p">print</span>(msg[<span class="s">"subject"</span>], <span class="s">"-"</span>, msg[<span class="s">"headerfrom"</span>])</div>
+            </div>
 
-    <section class="section-heading reveal" style="margin-top:80px">
-      <span class="eyebrow">LIMITS &amp; HEADERS</span>
-      <h2>Fair use, clearly stated.</h2>
-    </section>
+            <div class="tabs-panel" data-panel="curl">
+              <div class="code-block" data-copy><span class="c"># List inbox</span>
+curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=2"</span> | jq
 
-    <article class="endpoint glass reveal">
-      <p style="margin-bottom:14px">
-        <strong style="color:var(--text)">30 requests / minute per IP.</strong>
-        Exceeding this blacklists your IP for <strong style="color:var(--text)">5 minutes</strong>.
-        Every response includes standard rate-limit headers:
-      </p>
-      <div class="code-block">
-X-RateLimit-Limit: <span class="n">30</span>
+<span class="c"># Read one message</span>
+curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/message?mailbox=2&amp;id=abc123"</span> | jq
+
+<span class="c"># Delete one message</span>
+curl -s -X DELETE <span class="s">"https://zmaildrop.vercel.app/api/v1/message?mailbox=2&amp;id=abc123"</span> | jq</div>
+            </div>
+
+            <div class="tabs-panel" data-panel="node">
+              <div class="code-block" data-copy><span class="k">const</span> axios = <span class="p">require</span>(<span class="s">"axios"</span>);
+
+<span class="k">const</span> { data } = <span class="k">await</span> axios.<span class="p">get</span>(
+  <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox"</span>,
+  { params: { mailbox: <span class="s">"2"</span> } }
+);
+
+<span class="k">if</span> (data.ok) {
+  data.data.messages.<span class="p">forEach</span>(m =&gt; console.<span class="p">log</span>(m.subject));
+}</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- LIMITS -->
+        <section id="limits" class="docs-section reveal">
+          <span class="eyebrow">07 / LIMITS &amp; HEADERS</span>
+          <h2>Fair use, clearly stated.</h2>
+          <p>
+            Every response carries standard rate-limit headers. Your client should back off
+            automatically when it sees a <code>429</code>.
+          </p>
+
+          <article class="endpoint glass">
+            <div class="endpoint-body">
+              <div class="code-block">X-RateLimit-Limit: <span class="n">30</span>
 X-RateLimit-Remaining: <span class="n">14</span>
 X-RateLimit-Reset: <span class="n">1758550830</span>     <span class="c"># unix seconds</span>
-Retry-After: <span class="n">43</span>                     <span class="c"># only on 429</span>
-      </div>
-    </article>
+Retry-After: <span class="n">43</span>                     <span class="c"># only present on 429</span></div>
 
-    <section class="section-heading reveal" style="margin-top:80px">
-      <span class="eyebrow">ERROR CODES</span>
-      <h2>What can go wrong.</h2>
-    </section>
+              <div class="note">
+                <b>Policy:</b> 30 requests / minute / IP. Exceeding this blacklists your IP for <b>5 minutes</b>.
+                The window is sliding — it resets naturally 60 seconds after your first request.
+              </div>
+            </div>
+          </article>
+        </section>
 
-    <article class="endpoint glass reveal">
-      <div class="code-block">INVALID_MAILBOX      <span class="n">400</span>   Mailbox name failed validation
-INVALID_ID           <span class="n">400</span>   Message ID failed validation
-MESSAGE_NOT_FOUND    <span class="n">404</span>   Message doesn't exist or expired
-RATE_LIMITED         <span class="n">429</span>   You've hit 30 req/min
-IP_BLACKLISTED       <span class="n">429</span>   Your IP is temporarily blocked
-METHOD_NOT_ALLOWED   <span class="n">405</span>   Wrong HTTP verb for this endpoint
-UPSTREAM_BUSY        <span class="n">503</span>   Server queued too many requests at once
-UPSTREAM_ERROR       <span class="n">502</span>   Maildrop itself failed</div>
-    </article>
+        <!-- ERRORS -->
+        <section id="errors" class="docs-section reveal">
+          <span class="eyebrow">08 / ERROR CODES</span>
+          <h2>What can go wrong.</h2>
 
-    <section class="dev-cta glass reveal">
-      <div>
-        <span class="eyebrow">READY TO BUILD?</span>
-        <h2>Grab a mailbox. Hit the API.</h2>
-        <p>Open any mailbox name on the main site, then use it with the API. All inboxes are public.</p>
+          <table class="error-table">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Status</th>
+                <th>Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><code>MISSING_MAILBOX</code></td><td><span class="status-mini s-400">400</span></td><td>The <code>mailbox</code> query parameter was omitted.</td></tr>
+              <tr><td><code>MISSING_ID</code></td><td><span class="status-mini s-400">400</span></td><td>The <code>id</code> query parameter was omitted.</td></tr>
+              <tr><td><code>INVALID_MAILBOX</code></td><td><span class="status-mini s-400">400</span></td><td>Mailbox name failed validation (<code>a-z0-9._-</code>, max 64 chars).</td></tr>
+              <tr><td><code>INVALID_ID</code></td><td><span class="status-mini s-400">400</span></td><td>Message ID failed validation.</td></tr>
+              <tr><td><code>MESSAGE_NOT_FOUND</code></td><td><span class="status-mini s-404">404</span></td><td>Message doesn't exist, or it expired.</td></tr>
+              <tr><td><code>METHOD_NOT_ALLOWED</code></td><td><span class="status-mini s-405">405</span></td><td>Wrong HTTP verb for this endpoint.</td></tr>
+              <tr><td><code>RATE_LIMITED</code></td><td><span class="status-mini s-429">429</span></td><td>You've hit 30 requests in 60 seconds.</td></tr>
+              <tr><td><code>IP_BLACKLISTED</code></td><td><span class="status-mini s-429">429</span></td><td>Your IP is temporarily blocked for 5 minutes.</td></tr>
+              <tr><td><code>UPSTREAM_BUSY</code></td><td><span class="status-mini s-503">503</span></td><td>Server queued too many concurrent upstream calls.</td></tr>
+              <tr><td><code>UPSTREAM_ERROR</code></td><td><span class="status-mini s-502">502</span></td><td>Maildrop itself returned an error.</td></tr>
+              <tr><td><code>CLEANUP_FAILED</code></td><td><span class="status-mini s-500">500</span></td><td>Only on <code>/cleanup</code>. Firestore write failure.</td></tr>
+              <tr><td><code>UNAUTHORIZED</code></td><td><span class="status-mini s-400">401</span></td><td>Only on <code>/cleanup</code>. Missing or invalid <code>CRON_SECRET</code>.</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- HTTP -->
+        <section id="http" class="docs-section reveal">
+          <span class="eyebrow">09 / HTTP STATUS CODES</span>
+          <h2>Quick reference.</h2>
+
+          <div class="endpoint glass">
+            <div class="endpoint-body">
+              <div class="code-block"><span class="status-mini s-400">400</span>  Bad request — invalid or missing params
+<span class="status-mini s-404">404</span>  Not found — message doesn't exist
+<span class="status-mini s-405">405</span>  Method not allowed — wrong HTTP verb
+<span class="status-mini s-429">429</span>  Too many requests — rate limit or blacklist
+<span class="status-mini s-500">500</span>  Internal server error — cleanup failed
+<span class="status-mini s-502">502</span>  Bad gateway — Maildrop failed
+<span class="status-mini s-503">503</span>  Service unavailable — upstream busy</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="dev-cta glass reveal">
+          <div>
+            <span class="eyebrow">READY TO BUILD?</span>
+            <h2>Grab a mailbox. Hit the API.</h2>
+            <p>Open any mailbox name on the main site, then use it with the API. All inboxes are public and free forever.</p>
+          </div>
+          <div class="actions">
+            <a class="button button-ghost" href="/owner.html">Meet the dev</a>
+            <a class="button button-primary" href="/login.html">Open a mailbox →</a>
+          </div>
+        </section>
       </div>
-      <div class="actions">
-        <a class="button button-ghost" href="/owner.html">Meet the dev</a>
-        <a class="button button-primary" href="/login.html">Open a mailbox →</a>
-      </div>
-    </section>
+    </div>
   </main>
 
   <footer class="footer section-shell">
-    <div><a class="brand" href="/"><span class="brand-mark">Z</span><span><strong>ZMAIL</strong><small>DROP</small></span></a><p>Simple temporary mail access.</p></div>
-    <div class="footer-system"><span>AFRICA/LAGOS</span><strong data-lagos-clock>--:--:--</strong><small>© <span data-year-range>2025</span> ZMAIL Drop · A ♦ DEV ZIKKY TECH ♦ Project</small></div>
+    <div>
+      <a class="brand" href="/"><span class="brand-mark">Z</span><span><strong>ZMAIL</strong><small>DROP</small></span></a>
+      <p>Simple temporary mail access.</p>
+    </div>
+    <div class="footer-system">
+      <span>AFRICA/LAGOS</span>
+      <strong data-lagos-clock>--:--:--</strong>
+      <small>© <span data-year-range>2025</span> ZMAIL Drop · A ♦ DEV ZIKKY TECH ♦ Project</small>
+    </div>
   </footer>
 
   <script src="/js/clock.js" defer></script>
   <script src="/js/hamburger.js" defer></script>
   <script src="/js/ui.js" defer></script>
   <script>
+    /* Copy-to-clipboard */
     document.querySelectorAll("[data-copy]").forEach((block) => {
       const btn = document.createElement("button");
       btn.className = "copy";
@@ -211,6 +872,19 @@ UPSTREAM_ERROR       <span class="n">502</span>   Maildrop itself failed</div>
           btn.textContent = "COPIED";
         } catch { btn.textContent = "FAILED"; }
         setTimeout(() => (btn.textContent = "COPY"), 1400);
+      });
+    });
+
+    /* Tab switcher */
+    document.querySelectorAll("[data-tabs]").forEach((group) => {
+      const buttons = group.querySelectorAll(".tabs-nav button");
+      const panels = group.querySelectorAll(".tabs-panel");
+      buttons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const target = btn.dataset.tab;
+          buttons.forEach((b) => b.classList.toggle("active", b === btn));
+          panels.forEach((p) => p.classList.toggle("active", p.dataset.panel === target));
+        });
       });
     });
   </script>
