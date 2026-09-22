@@ -51,7 +51,6 @@ module.exports = async function handler(req, res) {
       endpoints: {
         inbox: "/api/v1/inbox?mailbox=:name",
         message: "/api/v1/message?mailbox=:name&id=:id",
-        domains: "/api/v1/domains",
         docs: utils.DOCS_URL,
       },
     },
