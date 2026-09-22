@@ -27,11 +27,6 @@ There's no account, no login, no tracking. You pick a mailbox name, and the ZMAI
 ```
 ---
 
-`📄 README.md — Deployment & Configuration Section`
-
-Here's the complete, polished deployment + configuration section. Replace your existing "🚢 Deployment" section with this.
-
----
 
 
 ## 🛠️ Built With
