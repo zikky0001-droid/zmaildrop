@@ -1,3 +1,5 @@
+// public/script.js
+
 (() => {
   "use strict";
 
@@ -279,6 +281,39 @@
     loadInbox(mailbox);
   }
 
+  function resolveCidImages(html, rawMime) {
+    if (!html || !rawMime) return html;
+
+    const parts = rawMime.split(/^--[^\r\n]+/m);
+    const cidMap = {};
+
+    for (const part of parts) {
+      const cidMatch = part.match(/Content-ID:\s*<([^>]+)>/i);
+      if (!cidMatch) continue;
+
+      const typeMatch = part.match(/Content-Type:\s*([^;\r\n]+)/i);
+      if (!typeMatch) continue;
+
+      if (!/Content-Transfer-Encoding:\s*base64/i.test(part)) continue;
+
+      const headerEnd = part.search(/\r?\n\r?\n/);
+      if (headerEnd === -1) continue;
+
+      const body = part
+        .slice(headerEnd)
+        .replace(/[\r\n\s]/g, "");
+
+      if (!body) continue;
+
+      const mimeType = typeMatch[1].trim();
+      cidMap[cidMatch[1]] = `data:${mimeType};base64,${body}`;
+    }
+
+    return html.replace(/cid:([^"'\s>)]+)/gi, (match, cid) =>
+      cidMap[cid] || match
+    );
+  }
+
   async function initView() {
     const view = $("#message-view");
     if (!view) return;
@@ -324,7 +359,8 @@
       $("#view-date").textContent = formatDate(message.date || message.createdAt || message.timestamp);
 
       const frame = $("#email-frame");
-      const html = message.html || message.bodyHtml || message.body || `<pre>${escapeHTML(message.text || "")}</pre>`;
+      const rawHtml = message.html || message.bodyHtml || message.body || `<pre>${escapeHTML(message.text || "")}</pre>`;
+      const html = resolveCidImages(rawHtml, message.data || "");
       frame.srcdoc = html;
 
       loading?.classList.add("hidden");
@@ -357,3 +393,5 @@
 
   document.addEventListener("DOMContentLoaded", start);
 })();
+
+
