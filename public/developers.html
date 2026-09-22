@@ -104,12 +104,6 @@ curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-n
     </article>
 
     <article class="endpoint glass reveal">
-      <div class="endpoint-head"><span class="verb get">GET</span><code>/api/v1/domains</code></div>
-      <p>Lists the domains this API can receive mail on.</p>
-      <div class="code-block" data-copy>curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/domains"</span></div>
-    </article>
-
-    <article class="endpoint glass reveal">
       <div class="endpoint-head"><span class="verb get">GET</span><code>/api/v1/inbox?mailbox=:name</code></div>
       <p>Lists all messages in a mailbox. Results are cached for 3 seconds to protect the upstream.</p>
       <div class="code-block" data-copy>curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-name"</span></div>
@@ -117,7 +111,7 @@ curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/inbox?mailbox=any-n
 
     <article class="endpoint glass reveal">
       <div class="endpoint-head"><span class="verb get">GET</span><code>/api/v1/message?mailbox=:name&amp;id=:id</code></div>
-      <p>Reads a single message by ID, including the raw MIME <code>data</code> field for attachment parsing.</p>
+      <p>Reads a single message by ID, including the raw Media/MIME <code>data</code> field for attachment parsing.</p>
       <div class="code-block" data-copy>curl -s <span class="s">"https://zmaildrop.vercel.app/api/v1/message?mailbox=any-name&amp;id=rvRN00Odx3"</span></div>
     </article>
 
