@@ -129,7 +129,7 @@ module.exports = async function handler(req, res) {
       isThrottle ? "UPSTREAM_BUSY" : "UPSTREAM_ERROR",
       isThrottle
         ? "Server is currently busy. Please retry in a moment."
-        : err.message || "Maildrop request failed.",
+        : err.message || "ZMail Drop request failed.",
       {
         hint: isThrottle
           ? "Too many concurrent requests. Try again in a few seconds."
