@@ -5,5 +5,12 @@
   "description": "A lightweight Vercel frontend for Maildrop inboxes.",
   "scripts": {
     "start": "vercel dev"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.6.0"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
+
